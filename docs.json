@@ -46,10 +46,7 @@
           {
             "group": "Endpoints",
             "pages": [
-              "api-reference/endpoint/instance",
-              "api-reference/endpoint/messaging",
-              "api-reference/endpoint/groups",
-              "api-reference/endpoint/webhooks"
+              "api-reference/openapi"
             ]
           }
         ]
