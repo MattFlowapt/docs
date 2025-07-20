@@ -70,7 +70,7 @@
                     "value": {
                       "state": "open",
                       "instance": {
-                        "instanceName": "FlowMod",
+                        "instanceName": "my-whatsapp-instance",
                         "status": "connected"
                       }
                     }
@@ -80,7 +80,7 @@
                     "value": {
                       "state": "close",
                       "instance": {
-                        "instanceName": "FlowMod",
+                        "instanceName": "my-whatsapp-instance",
                         "status": "disconnected"
                       }
                     }
@@ -135,7 +135,7 @@
             "description": "The name of your FlowMod instance",
             "schema": {
               "type": "string",
-              "example": "FlowMod"
+              "example": "my-whatsapp-instance"
             }
           }
         ],
