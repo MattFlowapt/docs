@@ -16,7 +16,7 @@
   ],
   "security": [
     {
-      "apiKeyAuth": []
+      "apiKey": []
     }
   ],
   "paths": {
@@ -126,11 +126,11 @@
   },
   "components": {
     "securitySchemes": {
-      "apiKeyAuth": {
+      "apiKey": {
         "type": "apiKey",
         "in": "header",
-        "name": "Authorization",
-        "description": "Enter your FlowMod API key with 'Bearer ' prefix"
+        "name": "apikey",
+        "description": "Enter your FlowMod API key"
       }
     },
     "schemas": {
