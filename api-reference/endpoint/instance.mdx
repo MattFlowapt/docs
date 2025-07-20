@@ -1,11 +1,11 @@
 ---
-title: 'Instance Management'
-description: 'Monitor WhatsApp instance connections and status'
+title: 'Instance Status'
+description: 'Check your WhatsApp instance connection status'
 ---
 
-# Instance Management
+# Instance Status
 
-Monitor your WhatsApp instance connection status and manage QR code generation for linking devices.
+Check the connection status of your WhatsApp instance to ensure it's ready for API calls.
 
 ## Get Connection State
 
@@ -62,74 +62,6 @@ print(data['instance']['state'])
 ```
 </CodeGroup>
 
----
-
-## Generate QR Code
-
-<Endpoint method="GET" endpoint="/instance/{instanceName}/connect">
-  Generate a QR code for connecting WhatsApp to your instance.
-</Endpoint>
-
-### Parameters
-
-<ParamField path="instanceName" type="string" required>
-  Your FlowMod instance name
-</ParamField>
-
-### Response
-
-<ResponseField name="qrcode" type="string">
-  Base64 encoded QR code image
-</ResponseField>
-
-<ResponseField name="count" type="number">
-  QR code generation attempt count
-</ResponseField>
-
-<CodeGroup>
-```bash cURL
-curl -X GET "https://api.flowmod.ai/instance/my-instance/connect" \
-  -H "apikey: YOUR_API_KEY"
-```
-
-```javascript JavaScript
-const response = await fetch('https://api.flowmod.ai/instance/my-instance/connect', {
-  headers: {
-    'apikey': 'YOUR_API_KEY'
-  }
-});
-
-const data = await response.json();
-// Display QR code: data.qrcode (base64 image)
-```
-</CodeGroup>
-
----
-
-## Restart Instance
-
-<Endpoint method="PUT" endpoint="/instance/{instanceName}/restart">
-  Restart a WhatsApp instance connection.
-</Endpoint>
-
-### Parameters
-
-<ParamField path="instanceName" type="string" required>
-  Your FlowMod instance name
-</ParamField>
-
-<CodeGroup>
-```bash cURL
-curl -X PUT "https://api.flowmod.ai/instance/my-instance/restart" \
-  -H "apikey: YOUR_API_KEY"
-```
-
-```javascript JavaScript
-await fetch('https://api.flowmod.ai/instance/my-instance/restart', {
-  method: 'PUT',
-  headers: {
-    'apikey': 'YOUR_API_KEY'
-  }
-});
-```
-</CodeGroup> 
+<Note>
+Make sure your instance shows "open" status before making API calls. Instance setup and WhatsApp connection is managed through the FlowMod platform.
+</Note> 
