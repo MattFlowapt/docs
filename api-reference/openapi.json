@@ -1,12 +1,12 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FlowMod WhatsApp API",
+    "title": "FlowMod API",
+    "description": "WhatsApp API for sending messages, managing groups, and handling webhooks through your FlowMod instance.",
     "version": "1.0.0",
-    "description": "Complete WhatsApp API integration for businesses and developers. Transform your personal WhatsApp number into a powerful API.",
     "contact": {
       "name": "FlowMod Support",
-      "email": "dev@flowapt.com"
+      "email": "matt@flowapt.com"
     }
   },
   "servers": [
@@ -17,76 +17,15 @@
   ],
   "security": [
     {
-      "ApiKeyAuth": []
+      "bearerAuth": []
     }
   ],
-  "components": {
-    "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "apikey",
-        "description": "Your FlowMod instance API key"
-      }
-    },
-    "schemas": {
-      "ConnectionState": {
-        "type": "object",
-        "properties": {
-          "instance": {
-            "type": "object",
-            "properties": {
-              "instanceName": {
-                "type": "string",
-                "description": "The name of the instance"
-              },
-              "state": {
-                "type": "string",
-                "enum": ["open", "connecting", "close"],
-                "description": "Current connection state"
-              }
-            }
-          }
-        }
-      },
-      "MessageResponse": {
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "object",
-            "description": "Message identifier object"
-          }
-        }
-      },
-      "GroupCreateRequest": {
-        "type": "object",
-        "required": ["subject", "participants"],
-        "properties": {
-          "subject": {
-            "type": "string",
-            "description": "Group name/subject"
-          },
-          "participants": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of phone numbers to add as participants"
-          },
-          "description": {
-            "type": "string",
-            "description": "Optional group description"
-          }
-        }
-      }
-    }
-  },
   "paths": {
     "/instance/{instanceName}/connectionState": {
       "get": {
-        "tags": ["Instance Status"],
-        "summary": "Get Connection State",
-        "description": "Check the current connection status of your WhatsApp instance",
+        "tags": ["Instance"],
+        "summary": "Check Connection Status",
+        "description": "Check if your WhatsApp instance is connected and ready to send messages",
         "parameters": [
           {
             "name": "instanceName",
@@ -95,16 +34,32 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your FlowMod instance name"
+            "description": "Your instance name from the FlowMod platform"
           }
         ],
         "responses": {
           "200": {
-            "description": "Connection state retrieved successfully",
+            "description": "Connection status response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConnectionState"
+                  "type": "object",
+                  "properties": {
+                    "instance": {
+                      "type": "object",
+                      "properties": {
+                        "instanceName": {
+                          "type": "string",
+                          "example": "my-instance"
+                        },
+                        "state": {
+                          "type": "string",
+                          "enum": ["open", "connecting", "close"],
+                          "example": "open"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -116,7 +71,7 @@
       "post": {
         "tags": ["Messaging"],
         "summary": "Send Text Message",
-        "description": "Send a text message to a WhatsApp number",
+        "description": "Send a text message to a WhatsApp number or group",
         "parameters": [
           {
             "name": "instanceName",
@@ -125,7 +80,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your FlowMod instance name"
+            "description": "Your instance name"
           }
         ],
         "requestBody": {
@@ -138,17 +93,18 @@
                 "properties": {
                   "number": {
                     "type": "string",
-                    "description": "Recipient's phone number (international format without +)",
-                    "example": "1234567890"
+                    "example": "1234567890",
+                    "description": "Phone number (international format without +)"
                   },
                   "text": {
                     "type": "string",
-                    "description": "The text message to send",
-                    "example": "Hello from FlowMod API!"
+                    "example": "Hello from FlowMod API!",
+                    "description": "Message text"
                   },
                   "delay": {
                     "type": "number",
-                    "description": "Optional delay in milliseconds before sending"
+                    "example": 1200,
+                    "description": "Typing delay in milliseconds"
                   }
                 }
               }
@@ -156,12 +112,30 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Message sent successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "3EB0C767D711AFFDD9C2"
+                        },
+                        "remoteJid": {
+                          "type": "string",
+                          "example": "1234567890@s.whatsapp.net"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object"
+                    }
+                  }
                 }
               }
             }
@@ -173,7 +147,7 @@
       "post": {
         "tags": ["Messaging"],
         "summary": "Send Media Message",
-        "description": "Send media files (images, videos, documents, audio) with optional caption",
+        "description": "Send images, videos, documents, or audio files",
         "parameters": [
           {
             "name": "instanceName",
@@ -181,8 +155,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Your FlowMod instance name"
+            }
           }
         ],
         "requestBody": {
@@ -195,27 +168,21 @@
                 "properties": {
                   "number": {
                     "type": "string",
-                    "description": "Recipient's phone number",
                     "example": "1234567890"
                   },
                   "mediatype": {
                     "type": "string",
-                    "enum": ["image", "video", "document", "audio"],
-                    "description": "Type of media"
+                    "enum": ["image", "video", "audio", "document"],
+                    "example": "image"
                   },
                   "media": {
                     "type": "string",
-                    "description": "URL or base64 encoded media file",
-                    "example": "https://example.com/image.jpg"
+                    "example": "https://example.com/image.jpg",
+                    "description": "URL or base64 encoded media"
                   },
                   "caption": {
                     "type": "string",
-                    "description": "Optional caption for the media",
-                    "example": "Check this out!"
-                  },
-                  "fileName": {
-                    "type": "string",
-                    "description": "Optional filename for documents"
+                    "example": "Photo caption"
                   }
                 }
               }
@@ -223,23 +190,16 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Media message sent successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
-                }
-              }
-            }
+          "201": {
+            "description": "Media sent successfully"
           }
         }
       }
     },
     "/group/create/{instanceName}": {
       "post": {
-        "tags": ["Group Management"],
-        "summary": "Create Group",
+        "tags": ["Groups"],
+        "summary": "Create WhatsApp Group",
         "description": "Create a new WhatsApp group with specified participants",
         "parameters": [
           {
@@ -248,8 +208,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Your FlowMod instance name"
+            }
           }
         ],
         "requestBody": {
@@ -257,36 +216,43 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/GroupCreateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Group created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "groupId": {
-                      "type": "string",
-                      "description": "The created group ID"
-                    }
+                "type": "object",
+                "required": ["subject", "participants"],
+                "properties": {
+                  "subject": {
+                    "type": "string",
+                    "example": "My API Group",
+                    "description": "Group name"
+                  },
+                  "participants": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["1234567890", "0987654321"],
+                    "description": "Array of phone numbers to add"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Group created via API"
                   }
                 }
               }
             }
           }
+        },
+        "responses": {
+          "201": {
+            "description": "Group created successfully"
+          }
         }
       }
     },
     "/group/updateParticipant/{instanceName}": {
-      "put": {
-        "tags": ["Group Management"],
-        "summary": "Update Group Participants",
-        "description": "Add, remove, promote, or demote participants in a WhatsApp group",
+      "post": {
+        "tags": ["Groups"],
+        "summary": "Add/Remove Group Participants",
+        "description": "Add or remove participants from a WhatsApp group",
         "parameters": [
           {
             "name": "instanceName",
@@ -294,8 +260,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Your FlowMod instance name"
+            }
           }
         ],
         "requestBody": {
@@ -308,20 +273,19 @@
                 "properties": {
                   "groupJid": {
                     "type": "string",
-                    "description": "Group ID (JID format)",
-                    "example": "group-id@g.us"
+                    "example": "120363123456789@g.us",
+                    "description": "Group ID"
                   },
                   "action": {
                     "type": "string",
                     "enum": ["add", "remove", "promote", "demote"],
-                    "description": "Action to perform on participants"
+                    "example": "add"
                   },
                   "participants": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "Array of participant phone numbers",
                     "example": ["1234567890"]
                   }
                 }
@@ -339,8 +303,8 @@
     "/webhook/set/{instanceName}": {
       "post": {
         "tags": ["Webhooks"],
-        "summary": "Set Webhook",
-        "description": "Configure webhook URL and events for your instance",
+        "summary": "Set Webhook URL",
+        "description": "Configure webhook URL to receive real-time message notifications",
         "parameters": [
           {
             "name": "instanceName",
@@ -348,8 +312,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Your FlowMod instance name"
+            }
           }
         ],
         "requestBody": {
@@ -362,28 +325,21 @@
                 "properties": {
                   "webhook": {
                     "type": "object",
-                    "required": ["url", "events"],
+                    "required": ["url"],
                     "properties": {
                       "url": {
                         "type": "string",
-                        "format": "uri",
-                        "description": "Your webhook endpoint URL",
-                        "example": "https://your-app.com/webhook"
+                        "example": "https://your-app.com/webhook",
+                        "description": "Your webhook endpoint URL"
                       },
                       "events": {
                         "type": "array",
                         "items": {
                           "type": "string",
-                          "enum": [
-                            "MESSAGES_UPSERT",
-                            "MESSAGES_UPDATE", 
-                            "CONNECTION_UPDATE",
-                            "GROUPS_UPSERT",
-                            "GROUP_PARTICIPANTS_UPDATE"
-                          ]
+                          "enum": ["MESSAGES_UPSERT", "CONNECTION_UPDATE", "GROUPS_UPSERT"]
                         },
-                        "description": "Array of event types to subscribe to",
-                        "example": ["MESSAGES_UPSERT", "CONNECTION_UPDATE"]
+                        "example": ["MESSAGES_UPSERT"],
+                        "description": "Events to subscribe to"
                       }
                     }
                   }
@@ -400,22 +356,31 @@
       }
     }
   },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Your FlowMod API key"
+      }
+    }
+  },
   "tags": [
     {
-      "name": "Instance Status",
-      "description": "Check WhatsApp instance connection status"
+      "name": "Instance",
+      "description": "Check your WhatsApp instance status"
     },
     {
-      "name": "Messaging", 
-      "description": "Send various types of WhatsApp messages"
+      "name": "Messaging",
+      "description": "Send text and media messages"
     },
     {
-      "name": "Group Management",
-      "description": "Create and manage WhatsApp groups and participants"
+      "name": "Groups",
+      "description": "Create and manage WhatsApp groups"
     },
     {
       "name": "Webhooks",
-      "description": "Configure webhooks for real-time event notifications"
+      "description": "Configure real-time event notifications"
     }
   ]
 }
