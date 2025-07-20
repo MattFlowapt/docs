@@ -122,6 +122,148 @@
         },
         "tags": ["Instance Management"]
       }
+    },
+    "/message/sendText/{instanceName}": {
+      "post": {
+        "summary": "Send Text Message",
+        "description": "Send a text message to a WhatsApp number through your connected instance.",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "description": "The name of your FlowMod instance",
+            "schema": {
+              "type": "string",
+              "example": "FlowMod"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["number", "text"],
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "description": "WhatsApp number in international format (without +)",
+                    "example": "1234567890"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Text message to send",
+                    "example": "Hello from FlowMod API!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "properties": {
+                        "remoteJid": {
+                          "type": "string",
+                          "description": "Recipient WhatsApp ID"
+                        },
+                        "fromMe": {
+                          "type": "boolean",
+                          "description": "Whether message is from sender"
+                        },
+                        "id": {
+                          "type": "string",
+                          "description": "Message ID"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "conversation": {
+                          "type": "string",
+                          "description": "The sent message text"
+                        }
+                      }
+                    },
+                    "messageTimestamp": {
+                      "type": "number",
+                      "description": "Unix timestamp of message"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Message status"
+                    }
+                  }
+                },
+                "example": {
+                  "key": {
+                    "remoteJid": "1234567890@s.whatsapp.net",
+                    "fromMe": true,
+                    "id": "3EB0C431D6C2E46E5B6F"
+                  },
+                  "message": {
+                    "conversation": "Hello from FlowMod API!"
+                  },
+                  "messageTimestamp": 1642678800,
+                  "status": "sent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Instance not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Messaging"]
+      }
     }
   },
   "components": {
@@ -154,6 +296,10 @@
     {
       "name": "Instance Management",
       "description": "Manage your WhatsApp instance connection and status"
+    },
+    {
+      "name": "Messaging",
+      "description": "Send messages through your WhatsApp instance"
     }
   ]
 }
