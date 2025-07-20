@@ -1,33 +1,105 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'FlowMod API Reference'
+description: 'Complete API documentation for FlowMod WhatsApp integration'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+# FlowMod API Reference
 
-## Welcome
+FlowMod provides a comprehensive REST API for integrating WhatsApp functionality into your applications. Send messages, manage groups, handle webhooks, and more.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Base URL
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+All API requests should be made to:
+
+```
+https://api.flowmod.ai
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require authentication using an API key in the header:
+
+```bash
+apikey: YOUR_INSTANCE_API_KEY
+```
+
+### Example Request
+
+```bash
+curl -X GET "https://api.flowmod.ai/instance/YOUR_INSTANCE/connectionState" \
+  -H "apikey: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+## API Categories
+
+<CardGroup cols={2}>
+  <Card
+    title="Instance Management"
+    icon="server"
+    href="/api-reference/instance"
+  >
+    Connect, monitor, and manage WhatsApp instances
+  </Card>
+  <Card
+    title="Messaging"
+    icon="message"
+    href="/api-reference/messaging"
+  >
+    Send text, media, documents, and other message types
+  </Card>
+  <Card
+    title="Group Management"
+    icon="users"
+    href="/api-reference/groups"
+  >
+    Create and manage WhatsApp groups programmatically
+  </Card>
+  <Card
+    title="Webhooks"
+    icon="webhook"
+    href="/api-reference/webhooks"
+  >
+    Configure real-time event notifications
+  </Card>
+</CardGroup>
+
+## Response Format
+
+All API responses follow a consistent format:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "success": true,
+  "data": {
+    // Response data here
+  },
+  "error": null
+}
 ```
+
+### Error Responses
+
+Error responses include details about what went wrong:
+
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "Instance not found"
+  }
+}
+```
+
+## Rate Limits
+
+FlowMod API respects WhatsApp's natural usage patterns. There are no artificial rate limits imposed by our API, but we recommend following WhatsApp's guidelines for message frequency.
+
+## Support
+
+Need help with the API? Contact our team:
+- Email: dev@flowapt.com
+- Documentation: This site
+- Platform: [app.flowiq.live](https://app.flowiq.live)

@@ -1,0 +1,195 @@
+---
+title: 'Webhooks'
+description: 'Configure real-time event notifications from WhatsApp'
+---
+
+# Webhooks
+
+Configure webhooks to receive real-time notifications when events occur in your WhatsApp instance.
+
+## Set Webhook
+
+<Endpoint method="POST" endpoint="/webhook/set/{instanceName}">
+  Configure webhook URL and events for your instance.
+</Endpoint>
+
+### Parameters
+
+<ParamField path="instanceName" type="string" required>
+  Your FlowMod instance name
+</ParamField>
+
+<ParamField body="webhook" type="object" required>
+  Webhook configuration object
+</ParamField>
+
+<ParamField body="webhook.url" type="string" required>
+  Your webhook endpoint URL
+</ParamField>
+
+<ParamField body="webhook.events" type="array" required>
+  Array of event types to subscribe to
+</ParamField>
+
+### Available Events
+
+- `MESSAGES_UPSERT` - New incoming messages
+- `MESSAGES_UPDATE` - Message status updates  
+- `CONNECTION_UPDATE` - Instance connection changes
+- `GROUPS_UPSERT` - Group creation/updates
+- `GROUP_PARTICIPANTS_UPDATE` - Group participant changes
+
+<CodeGroup>
+```bash cURL
+curl -X POST "https://api.flowmod.ai/webhook/set/my-instance" \
+  -H "apikey: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "webhook": {
+      "url": "https://your-app.com/webhook",
+      "events": ["MESSAGES_UPSERT", "CONNECTION_UPDATE"]
+    }
+  }'
+```
+
+```javascript JavaScript
+await fetch('https://api.flowmod.ai/webhook/set/my-instance', {
+  method: 'POST',
+  headers: {
+    'apikey': 'YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    webhook: {
+      url: 'https://your-app.com/webhook',
+      events: ['MESSAGES_UPSERT', 'CONNECTION_UPDATE']
+    }
+  })
+});
+```
+
+```python Python
+requests.post(
+    'https://api.flowmod.ai/webhook/set/my-instance',
+    headers={
+        'apikey': 'YOUR_API_KEY',
+        'Content-Type': 'application/json'
+    },
+    json={
+        'webhook': {
+            'url': 'https://your-app.com/webhook',
+            'events': ['MESSAGES_UPSERT', 'CONNECTION_UPDATE']
+        }
+    }
+)
+```
+</CodeGroup>
+
+---
+
+## Get Webhook Config
+
+<Endpoint method="GET" endpoint="/webhook/find/{instanceName}">
+  Retrieve current webhook configuration for your instance.
+</Endpoint>
+
+### Parameters
+
+<ParamField path="instanceName" type="string" required>
+  Your FlowMod instance name
+</ParamField>
+
+### Response
+
+<ResponseField name="webhook" type="object">
+  Current webhook configuration
+</ResponseField>
+
+<CodeGroup>
+```bash cURL
+curl -X GET "https://api.flowmod.ai/webhook/find/my-instance" \
+  -H "apikey: YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.flowmod.ai/webhook/find/my-instance', {
+  headers: {
+    'apikey': 'YOUR_API_KEY'
+  }
+});
+
+const config = await response.json();
+console.log(config.webhook);
+```
+</CodeGroup>
+
+---
+
+## Webhook Event Examples
+
+### Message Received Event
+
+When someone sends a message to your WhatsApp, you'll receive a webhook like this:
+
+```json
+{
+  "event": "MESSAGES_UPSERT",
+  "instance": "my-instance",
+  "data": {
+    "key": {
+      "remoteJid": "1234567890@s.whatsapp.net",
+      "fromMe": false,
+      "id": "message-id"
+    },
+    "message": {
+      "conversation": "Hello! This is a test message."
+    },
+    "messageTimestamp": 1234567890
+  }
+}
+```
+
+### Connection Status Update
+
+When your instance connection status changes:
+
+```json
+{
+  "event": "CONNECTION_UPDATE",
+  "instance": "my-instance", 
+  "data": {
+    "state": "open",
+    "lastDisconnect": null
+  }
+}
+```
+
+### Group Participant Update
+
+When someone joins or leaves a group:
+
+```json
+{
+  "event": "GROUP_PARTICIPANTS_UPDATE",
+  "instance": "my-instance",
+  "data": {
+    "id": "group-id@g.us",
+    "participants": ["1234567890@s.whatsapp.net"],
+    "action": "add"
+  }
+}
+```
+
+---
+
+## Testing Webhooks
+
+You can test your webhook endpoint using tools like:
+
+- **ngrok** - Expose local development server
+- **Webhook.site** - Online webhook testing
+- **Postman** - API testing tool
+
+<Tip>
+Make sure your webhook endpoint responds with a 200 status code to acknowledge receipt of the event.
+</Tip> 
