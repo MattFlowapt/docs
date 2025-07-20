@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "FlowMod API",
+    "description": "FlowMod API provides programmatic access to your WhatsApp instance. Send messages, manage groups, handle webhooks, and integrate WhatsApp functionality into your applications.",
     "license": {
       "name": "MIT"
     },
@@ -10,7 +10,8 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.flowmod.ai",
+      "description": "FlowMod API Production Server"
     }
   ],
   "security": [
@@ -19,36 +20,77 @@
     }
   ],
   "paths": {
-    "/plants": {
+    "/instance/{instanceName}/connectionState": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "summary": "Check Connection Status",
+        "description": "Check the connection status of your WhatsApp instance. Returns the current state of the connection.",
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "description": "The name of your FlowMod instance",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "example": "my-whatsapp-instance"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Connection status retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "type": "object",
+                  "properties": {
+                    "state": {
+                      "type": "string",
+                      "enum": ["open", "connecting", "close"],
+                      "description": "Current connection state"
+                    },
+                    "instance": {
+                      "type": "object",
+                      "properties": {
+                        "instanceName": {
+                          "type": "string",
+                          "description": "Name of the instance"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Instance status"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "connected": {
+                    "summary": "Connected instance",
+                    "value": {
+                      "state": "open",
+                      "instance": {
+                        "instanceName": "my-whatsapp-instance",
+                        "status": "connected"
+                      }
+                    }
+                  },
+                  "disconnected": {
+                    "summary": "Disconnected instance",
+                    "value": {
+                      "state": "close",
+                      "instance": {
+                        "instanceName": "my-whatsapp-instance",
+                        "status": "disconnected"
+                      }
+                    }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Unexpected error",
+          "401": {
+            "description": "Unauthorized - Invalid API key",
             "content": {
               "application/json": {
                 "schema": {
@@ -56,35 +98,9 @@
                 }
               }
             }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
+          "404": {
+            "description": "Instance not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -92,126 +108,52 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
           },
-          "400": {
-            "description": "unexpected error",
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        }
+        "tags": ["Instance Management"]
       }
     }
   },
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter your FlowMod API key"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error type"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Instance Management",
+      "description": "Manage your WhatsApp instance connection and status"
+    }
+  ]
 }
