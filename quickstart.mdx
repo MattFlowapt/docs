@@ -1,176 +1,68 @@
 ---
-title: QuickStart - Get Up and Running in 5 Minutes
-description: Connect your personal WhatsApp to FlowMod API and send your first API message in under 5 minutes.
+title: Quick Start
+description: Send your first message using FlowMod API in 5 minutes.
 ---
 
-# Get Started with FlowMod API
+# Quick Start
 
-Transform your personal WhatsApp into a powerful API in just **5 minutes**. No business verification, no complex setup - just scan, authenticate, and start sending messages programmatically.
+Get started with FlowMod API. This guide assumes you already have a FlowMod instance set up at [app.flowiq.live/flowmod](https://app.flowiq.live/flowmod).
 
-## Step 1: Get Your API Credentials
+## Prerequisites
 
-### 🔑 Sign Up & Get API Key
-First, get your FlowMod API credentials:
+You need:
+- FlowMod instance name
+- API key
+- Connected WhatsApp (QR code scanned)
 
-1. Sign up at [FlowMod API Portal](https://api.flowmod.ai)
-2. Create a new project
-3. Copy your API key from the dashboard
+## 1. Check Connection Status
 
-<Warning>
-Keep your API key secure and never expose it in client-side code. Use environment variables or secure credential storage.
-</Warning>
-
-## Step 2: Connect Your WhatsApp Instance
-
-### 🔗 Create Connection
-Create a new WhatsApp instance using the API:
+Verify your WhatsApp instance is connected:
 
 <CodeGroup>
 ```bash cURL
-curl -X POST 'https://api.flowmod.ai/instance/create' \
-  -H 'Authorization: Bearer YOUR_API_KEY' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "instanceName": "my-whatsapp-api",
-    "integration": "WHATSAPP-BAILEYS"
-  }'
-```
-
-```javascript JavaScript
-const response = await fetch('https://api.flowmod.ai/instance/create', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    instanceName: 'my-whatsapp-api',
-    integration: 'WHATSAPP-BAILEYS'
-  })
-});
-
-const data = await response.json();
-console.log('Instance created:', data);
-```
-
-```python Python
-import requests
-
-response = requests.post(
-    'https://api.flowmod.ai/instance/create',
-    headers={
-        'Authorization': 'Bearer YOUR_API_KEY',
-        'Content-Type': 'application/json'
-    },
-    json={
-        'instanceName': 'my-whatsapp-api',
-        'integration': 'WHATSAPP-BAILEYS'
-    }
-)
-
-data = response.json()
-print('Instance created:', data)
-```
-</CodeGroup>
-
-### 📱 Get QR Code
-Generate a QR code to link your personal WhatsApp:
-
-<CodeGroup>
-```bash cURL
-curl -X GET 'https://api.flowmod.ai/instance/my-whatsapp-api/connect' \
+curl -X GET 'https://api.flowmod.ai/instance/YOUR_INSTANCE/connectionState' \
   -H 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ```javascript JavaScript
-const response = await fetch('https://api.flowmod.ai/instance/my-whatsapp-api/connect', {
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY'
-  }
-});
-
-const data = await response.json();
-// QR code will be in data.qrcode (base64 image)
-console.log('QR Code:', data.qrcode);
-```
-
-```python Python
-response = requests.get(
-    'https://api.flowmod.ai/instance/my-whatsapp-api/connect',
-    headers={'Authorization': 'Bearer YOUR_API_KEY'}
-)
-
-data = response.json()
-# QR code will be in data['qrcode'] (base64 image)
-print('QR Code received')
-```
-</CodeGroup>
-
-### ✅ Scan & Link Your WhatsApp
-1. Open WhatsApp on your phone
-2. Go to **Settings** → **Linked Devices** → **Link a Device**
-3. Scan the QR code from the API response
-4. Your personal WhatsApp is now connected to the API!
-
-<Note>
-QR codes expire after 40 seconds. If it expires, simply request a new one using the same endpoint.
-</Note>
-
-## Step 3: Verify Connection Status
-
-Check that your WhatsApp instance is connected and ready for API calls:
-
-<CodeGroup>
-```bash cURL
-curl -X GET 'https://api.flowmod.ai/instance/my-whatsapp-api/connectionState' \
-  -H 'Authorization: Bearer YOUR_API_KEY'
-```
-
-```javascript JavaScript
-const response = await fetch('https://api.flowmod.ai/instance/my-whatsapp-api/connectionState', {
+const response = await fetch('https://api.flowmod.ai/instance/YOUR_INSTANCE/connectionState', {
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY'
   }
 });
 
 const status = await response.json();
-console.log('Connection status:', status.state); // Should be "open"
+console.log('Status:', status.state); // Should be "open"
 ```
 
 ```python Python
+import requests
+
 response = requests.get(
-    'https://api.flowmod.ai/instance/my-whatsapp-api/connectionState',
+    'https://api.flowmod.ai/instance/YOUR_INSTANCE/connectionState',
     headers={'Authorization': 'Bearer YOUR_API_KEY'}
 )
 
 status = response.json()
-print('Connection status:', status['state'])  # Should be "open"
+print('Status:', status['state'])  # Should be "open"
 ```
 </CodeGroup>
 
-<Tip>
-Wait for the status to show `"open"` before proceeding. This usually takes 10-30 seconds after scanning the QR code.
-</Tip>
-
-## Step 4: Send Your First API Message
-
-Now for the exciting part - send your first programmatic WhatsApp message!
-
-### 📝 Send Text Message
+## 2. Send Text Message
 
 <CodeGroup>
 ```bash cURL
-curl -X POST 'https://api.flowmod.ai/message/sendText/my-whatsapp-api' \
+curl -X POST 'https://api.flowmod.ai/message/sendText/YOUR_INSTANCE' \
   -H 'Authorization: Bearer YOUR_API_KEY' \
   -H 'Content-Type: application/json' \
   -d '{
     "number": "1234567890",
-    "text": "Hello from FlowMod API! 🚀"
+    "text": "Hello from FlowMod API!"
   }'
 ```
 
 ```javascript JavaScript
-const response = await fetch('https://api.flowmod.ai/message/sendText/my-whatsapp-api', {
+const response = await fetch('https://api.flowmod.ai/message/sendText/YOUR_INSTANCE', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
@@ -178,7 +70,7 @@ const response = await fetch('https://api.flowmod.ai/message/sendText/my-whatsap
   },
   body: JSON.stringify({
     number: '1234567890',
-    text: 'Hello from FlowMod API! 🚀'
+    text: 'Hello from FlowMod API!'
   })
 });
 
@@ -188,14 +80,14 @@ console.log('Message sent:', result);
 
 ```python Python
 response = requests.post(
-    'https://api.flowmod.ai/message/sendText/my-whatsapp-api',
+    'https://api.flowmod.ai/message/sendText/YOUR_INSTANCE',
     headers={
         'Authorization': 'Bearer YOUR_API_KEY',
         'Content-Type': 'application/json'
     },
     json={
         'number': '1234567890',
-        'text': 'Hello from FlowMod API! 🚀'
+        'text': 'Hello from FlowMod API!'
     }
 )
 
@@ -204,23 +96,23 @@ print('Message sent:', result)
 ```
 </CodeGroup>
 
-### 🖼️ Send Media Message
+## 3. Send Media
 
 <CodeGroup>
 ```bash cURL
-curl -X POST 'https://api.flowmod.ai/message/sendMedia/my-whatsapp-api' \
+curl -X POST 'https://api.flowmod.ai/message/sendMedia/YOUR_INSTANCE' \
   -H 'Authorization: Bearer YOUR_API_KEY' \
   -H 'Content-Type: application/json' \
   -d '{
     "number": "1234567890",
     "mediatype": "image",
     "media": "https://example.com/image.jpg",
-    "caption": "Sent via FlowMod API! 📸"
+    "caption": "Sent via API"
   }'
 ```
 
 ```javascript JavaScript
-const response = await fetch('https://api.flowmod.ai/message/sendMedia/my-whatsapp-api', {
+await fetch('https://api.flowmod.ai/message/sendMedia/YOUR_INSTANCE', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
@@ -230,14 +122,14 @@ const response = await fetch('https://api.flowmod.ai/message/sendMedia/my-whatsa
     number: '1234567890',
     mediatype: 'image',
     media: 'https://example.com/image.jpg',
-    caption: 'Sent via FlowMod API! 📸'
+    caption: 'Sent via API'
   })
 });
 ```
 
 ```python Python
-response = requests.post(
-    'https://api.flowmod.ai/message/sendMedia/my-whatsapp-api',
+requests.post(
+    'https://api.flowmod.ai/message/sendMedia/YOUR_INSTANCE',
     headers={
         'Authorization': 'Bearer YOUR_API_KEY',
         'Content-Type': 'application/json'
@@ -246,31 +138,29 @@ response = requests.post(
         'number': '1234567890',
         'mediatype': 'image',
         'media': 'https://example.com/image.jpg',
-        'caption': 'Sent via FlowMod API! 📸'
+        'caption': 'Sent via API'
     }
 )
 ```
 </CodeGroup>
 
-## Step 5: Set Up Webhooks (Optional)
-
-Receive real-time notifications when messages arrive:
+## 4. Set Up Webhooks
 
 <CodeGroup>
 ```bash cURL
-curl -X POST 'https://api.flowmod.ai/webhook/set/my-whatsapp-api' \
+curl -X POST 'https://api.flowmod.ai/webhook/set/YOUR_INSTANCE' \
   -H 'Authorization: Bearer YOUR_API_KEY' \
   -H 'Content-Type: application/json' \
   -d '{
     "webhook": {
       "url": "https://your-app.com/webhook",
-      "events": ["MESSAGES_UPSERT", "CONNECTION_UPDATE"]
+      "events": ["MESSAGES_UPSERT"]
     }
   }'
 ```
 
 ```javascript JavaScript
-const response = await fetch('https://api.flowmod.ai/webhook/set/my-whatsapp-api', {
+await fetch('https://api.flowmod.ai/webhook/set/YOUR_INSTANCE', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
@@ -279,15 +169,15 @@ const response = await fetch('https://api.flowmod.ai/webhook/set/my-whatsapp-api
   body: JSON.stringify({
     webhook: {
       url: 'https://your-app.com/webhook',
-      events: ['MESSAGES_UPSERT', 'CONNECTION_UPDATE']
+      events: ['MESSAGES_UPSERT']
     }
   })
 });
 ```
 
 ```python Python
-response = requests.post(
-    'https://api.flowmod.ai/webhook/set/my-whatsapp-api',
+requests.post(
+    'https://api.flowmod.ai/webhook/set/YOUR_INSTANCE',
     headers={
         'Authorization': 'Bearer YOUR_API_KEY',
         'Content-Type': 'application/json'
@@ -295,81 +185,42 @@ response = requests.post(
     json={
         'webhook': {
             'url': 'https://your-app.com/webhook',
-            'events': ['MESSAGES_UPSERT', 'CONNECTION_UPDATE']
+            'events': ['MESSAGES_UPSERT']
         }
     }
 )
 ```
 </CodeGroup>
 
-## 🎉 Success! Your WhatsApp is Now an API
-
-You've successfully:
-- ✅ Connected your personal WhatsApp to FlowMod API
-- ✅ Verified the connection status
-- ✅ Sent your first programmatic message
-- ✅ Set up real-time webhooks (optional)
-
-## Next Steps - Explore API Capabilities
+## Next Steps
 
 <CardGroup cols={2}>
-  <Card
-    title="Group Management API"
-    icon="users"
-    href="/api-reference/groups"
-  >
-    Create and manage WhatsApp groups programmatically
+  <Card title="API Reference" icon="book" href="/api-reference/introduction">
+    Complete endpoint documentation
   </Card>
-  <Card
-    title="Complete API Reference"
-    icon="book"
-    href="/api-reference/introduction"
-  >
-    Explore all available endpoints and features
+  <Card title="Group Management" icon="users" href="/api-reference/groups">
+    Manage WhatsApp groups programmatically
   </Card>
-  <Card
-    title="Webhook Events"
-    icon="webhook"
-    href="/api-reference/webhooks"
-  >
-    Handle real-time WhatsApp events in your app
+  <Card title="Webhooks" icon="webhook" href="/api-reference/webhooks">
+    Handle real-time events
   </Card>
-  <Card
-    title="Message Types"
-    icon="message"
-    href="/api-reference/messaging"
-  >
-    Send different types of media and content
+  <Card title="Message Types" icon="message" href="/api-reference/messaging">
+    All supported message formats
   </Card>
 </CardGroup>
 
-## 🆘 Troubleshooting
+## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Connection Issues">
-    - Ensure your phone has stable internet connectivity
-    - Try generating a new QR code if the previous one expired
-    - Verify WhatsApp is updated to the latest version
-    - Check that you're scanning with the correct WhatsApp account
+    - Verify instance name and API key
+    - Check connection status shows "open"
+    - Ensure WhatsApp is connected via QR code
   </Accordion>
   
-  <Accordion title="Message Not Delivered">
-    - Verify phone number format (international format without + symbol)
-    - Confirm your instance connection state shows "open"
-    - Ensure the recipient has WhatsApp installed and is reachable
-    - Check that you're not exceeding WhatsApp's natural usage limits
-  </Accordion>
-  
-  <Accordion title="API Authentication Errors">
-    - Verify your API key is correct and hasn't expired
-    - Check that you're including the "Bearer " prefix in the Authorization header
-    - Ensure your API key has the necessary permissions
-    - Confirm the API endpoint URLs are correct
+  <Accordion title="Message Delivery">
+    - Use international format without + (e.g., 1234567890)
+    - Verify recipient has WhatsApp
+    - Check instance connection status
   </Accordion>
 </AccordionGroup>
-
----
-
-<Tip>
-**Ready to build something amazing?** Your personal WhatsApp number is now a full-featured API. Start building chatbots, automation tools, or integrate WhatsApp into your existing applications!
-</Tip>
