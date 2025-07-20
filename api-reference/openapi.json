@@ -1,18 +1,16 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FlowMod API",
-    "description": "WhatsApp API for sending messages, managing groups, and handling webhooks through your FlowMod instance.",
-    "version": "1.0.0",
-    "contact": {
-      "name": "FlowMod Support",
-      "email": "matt@flowapt.com"
-    }
+    "title": "OpenAPI Plant Store",
+    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "license": {
+      "name": "MIT"
+    },
+    "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://api.flowmod.ai",
-      "description": "FlowMod Production API"
+      "url": "http://sandbox.mintlify.com"
     }
   ],
   "security": [
@@ -21,366 +19,199 @@
     }
   ],
   "paths": {
-    "/instance/{instanceName}/connectionState": {
+    "/plants": {
       "get": {
-        "tags": ["Instance"],
-        "summary": "Check Connection Status",
-        "description": "Check if your WhatsApp instance is connected and ready to send messages",
+        "description": "Returns all plants from the system that the user has access to",
         "parameters": [
           {
-            "name": "instanceName",
-            "in": "path",
-            "required": true,
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of results to return",
             "schema": {
-              "type": "string"
-            },
-            "description": "Your instance name from the FlowMod platform"
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Connection status response",
+            "description": "Plant response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "instance": {
-                      "type": "object",
-                      "properties": {
-                        "instanceName": {
-                          "type": "string",
-                          "example": "my-instance"
-                        },
-                        "state": {
-                          "type": "string",
-                          "enum": ["open", "connecting", "close"],
-                          "example": "open"
-                        }
-                      }
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Plant"
                   }
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/message/sendText/{instanceName}": {
-      "post": {
-        "tags": ["Messaging"],
-        "summary": "Send Text Message",
-        "description": "Send a text message to a WhatsApp number or group",
-        "parameters": [
-          {
-            "name": "instanceName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your instance name"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["number", "text"],
-                "properties": {
-                  "number": {
-                    "type": "string",
-                    "example": "1234567890",
-                    "description": "Phone number (international format without +)"
-                  },
-                  "text": {
-                    "type": "string",
-                    "example": "Hello from FlowMod API!",
-                    "description": "Message text"
-                  },
-                  "delay": {
-                    "type": "number",
-                    "example": 1200,
-                    "description": "Typing delay in milliseconds"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Message sent successfully",
+          },
+          "400": {
+            "description": "Unexpected error",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "key": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "3EB0C767D711AFFDD9C2"
-                        },
-                        "remoteJid": {
-                          "type": "string",
-                          "example": "1234567890@s.whatsapp.net"
-                        }
-                      }
-                    },
-                    "message": {
-                      "type": "object"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/message/sendMedia/{instanceName}": {
+      },
       "post": {
-        "tags": ["Messaging"],
-        "summary": "Send Media Message",
-        "description": "Send images, videos, documents, or audio files",
-        "parameters": [
-          {
-            "name": "instanceName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "description": "Creates a new plant in the store",
         "requestBody": {
-          "required": true,
+          "description": "Plant to add to the store",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["number", "mediatype", "media"],
-                "properties": {
-                  "number": {
-                    "type": "string",
-                    "example": "1234567890"
-                  },
-                  "mediatype": {
-                    "type": "string",
-                    "enum": ["image", "video", "audio", "document"],
-                    "example": "image"
-                  },
-                  "media": {
-                    "type": "string",
-                    "example": "https://example.com/image.jpg",
-                    "description": "URL or base64 encoded media"
-                  },
-                  "caption": {
-                    "type": "string",
-                    "example": "Photo caption"
-                  }
-                }
+                "$ref": "#/components/schemas/NewPlant"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
-          "201": {
-            "description": "Media sent successfully"
-          }
-        }
-      }
-    },
-    "/group/create/{instanceName}": {
-      "post": {
-        "tags": ["Groups"],
-        "summary": "Create WhatsApp Group",
-        "description": "Create a new WhatsApp group with specified participants",
-        "parameters": [
-          {
-            "name": "instanceName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+          "200": {
+            "description": "plant response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plant"
+                }
+              }
             }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["subject", "participants"],
-                "properties": {
-                  "subject": {
-                    "type": "string",
-                    "example": "My API Group",
-                    "description": "Group name"
-                  },
-                  "participants": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "example": ["1234567890", "0987654321"],
-                    "description": "Array of phone numbers to add"
-                  },
-                  "description": {
-                    "type": "string",
-                    "example": "Group created via API"
-                  }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        },
-        "responses": {
-          "201": {
-            "description": "Group created successfully"
-          }
         }
       }
     },
-    "/group/updateParticipant/{instanceName}": {
-      "post": {
-        "tags": ["Groups"],
-        "summary": "Add/Remove Group Participants",
-        "description": "Add or remove participants from a WhatsApp group",
+    "/plants/{id}": {
+      "delete": {
+        "description": "Deletes a single plant based on the ID supplied",
         "parameters": [
           {
-            "name": "instanceName",
+            "name": "id",
             "in": "path",
+            "description": "ID of plant to delete",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "Plant deleted",
+            "content": {}
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "/plant/webhook": {
+      "post": {
+        "description": "Information about a new plant added to the store",
         "requestBody": {
-          "required": true,
+          "description": "Plant added to the store",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["groupJid", "action", "participants"],
-                "properties": {
-                  "groupJid": {
-                    "type": "string",
-                    "example": "120363123456789@g.us",
-                    "description": "Group ID"
-                  },
-                  "action": {
-                    "type": "string",
-                    "enum": ["add", "remove", "promote", "demote"],
-                    "example": "add"
-                  },
-                  "participants": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "example": ["1234567890"]
-                  }
-                }
+                "$ref": "#/components/schemas/NewPlant"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Participants updated successfully"
-          }
-        }
-      }
-    },
-    "/webhook/set/{instanceName}": {
-      "post": {
-        "tags": ["Webhooks"],
-        "summary": "Set Webhook URL",
-        "description": "Configure webhook URL to receive real-time message notifications",
-        "parameters": [
-          {
-            "name": "instanceName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["webhook"],
-                "properties": {
-                  "webhook": {
-                    "type": "object",
-                    "required": ["url"],
-                    "properties": {
-                      "url": {
-                        "type": "string",
-                        "example": "https://your-app.com/webhook",
-                        "description": "Your webhook endpoint URL"
-                      },
-                      "events": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": ["MESSAGES_UPSERT", "CONNECTION_UPDATE", "GROUPS_UPSERT"]
-                        },
-                        "example": ["MESSAGES_UPSERT"],
-                        "description": "Events to subscribe to"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Webhook configured successfully"
+            "description": "Return a 200 status to indicate that the data was received successfully"
           }
         }
       }
     }
   },
   "components": {
+    "schemas": {
+      "Plant": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the plant",
+            "type": "string"
+          },
+          "tag": {
+            "description": "Tag to specify the type",
+            "type": "string"
+          }
+        }
+      },
+      "NewPlant": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Plant"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Identification number of the plant",
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ]
+      },
+      "Error": {
+        "required": [
+          "error",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer",
-        "description": "Your FlowMod API key"
+        "scheme": "bearer"
       }
     }
-  },
-  "tags": [
-    {
-      "name": "Instance",
-      "description": "Check your WhatsApp instance status"
-    },
-    {
-      "name": "Messaging",
-      "description": "Send text and media messages"
-    },
-    {
-      "name": "Groups",
-      "description": "Create and manage WhatsApp groups"
-    },
-    {
-      "name": "Webhooks",
-      "description": "Configure real-time event notifications"
-    }
-  ]
+  }
 }

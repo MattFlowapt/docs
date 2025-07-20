@@ -1,48 +1,33 @@
 ---
-title: 'API Reference'
-description: 'Complete FlowMod API documentation for WhatsApp integration'
+title: 'Introduction'
+description: 'Example section for showcasing API endpoints'
 ---
 
-## FlowMod WhatsApp API
-
-The FlowMod API provides programmatic access to WhatsApp messaging, group management, and webhook functionality through your connected instance.
-
 <Note>
-Your instance is set up and managed at [app.flowiq.live/flowmod](https://app.flowiq.live/flowmod). Once connected, use these API endpoints to integrate WhatsApp into your applications.
+  If you're not looking to build API reference documentation, you can delete
+  this section by removing the api-reference folder.
 </Note>
 
+## Welcome
+
+There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+
 <Card
-  title="FlowMod API Endpoints"
-  icon="code"
-  href="https://api.flowmod.ai"
+  title="Plant Store Endpoints"
+  icon="leaf"
+  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
 >
-  Base URL: https://api.flowmod.ai
+  View the OpenAPI specification file
 </Card>
 
 ## Authentication
 
-All API endpoints require authentication using Bearer tokens in the Authorization header:
+All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
 
-```bash
-Authorization: Bearer YOUR_API_KEY
+```json
+"security": [
+  {
+    "bearerAuth": []
+  }
+]
 ```
-
-Example API call:
-```bash
-curl -X GET "https://api.flowmod.ai/instance/YOUR_INSTANCE/connectionState" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json"
-```
-
-## Core Endpoints
-
-- **Instance Management**: Check connection status and manage your WhatsApp instance
-- **Messaging**: Send text messages, media, and handle message operations  
-- **Groups**: Create and manage WhatsApp groups programmatically
-- **Webhooks**: Configure real-time event notifications for your applications
-
-## Getting Started
-
-1. Get your instance name and API key from [app.flowiq.live/flowmod](https://app.flowiq.live/flowmod)
-2. Ensure your WhatsApp is connected (status should be "open")
-3. Start making API calls using the endpoints below
