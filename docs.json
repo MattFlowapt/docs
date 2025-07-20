@@ -75,7 +75,10 @@
       ]
     }
   },
-  "logo": "/logo.png",
+  "logo": {
+    "light": "/light.png",
+    "dark": "/dark.png"
+  },
   "navbar": {
     "links": [
       {
