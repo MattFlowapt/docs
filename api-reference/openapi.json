@@ -20,7 +20,7 @@
     }
   ],
   "paths": {
-    "/instance/{instanceName}/connectionState": {
+    "/instance/connectionState/{instanceName}": {
       "get": {
         "summary": "Check Connection Status",
         "description": "Check the connection status of your WhatsApp instance. Returns the current state of the connection.",
@@ -70,7 +70,7 @@
                     "value": {
                       "state": "open",
                       "instance": {
-                        "instanceName": "my-whatsapp-instance",
+                        "instanceName": "FlowMod",
                         "status": "connected"
                       }
                     }
@@ -80,7 +80,7 @@
                     "value": {
                       "state": "close",
                       "instance": {
-                        "instanceName": "my-whatsapp-instance",
+                        "instanceName": "FlowMod",
                         "status": "disconnected"
                       }
                     }
