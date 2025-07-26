@@ -116,10 +116,10 @@
     }
   },
   "footer": {
-    "socials": {
-      "x": "https://x.com/flowapt",
-      "github": "https://github.com/FlowaAI",
-      "linkedin": "https://linkedin.com/company/flowapt"
-    }
+          "socials": {
+        "x": "https://x.com/flowapt",
+        "github": "https://github.com/FlowApt",
+        "linkedin": "https://linkedin.com/company/flowapt"
+      }
   }
 }
