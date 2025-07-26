@@ -1,281 +1,119 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FlowMod API",
-    "description": "FlowMod API provides programmatic access to your WhatsApp instance. Send messages, manage groups, handle webhooks, and integrate WhatsApp functionality into your applications.",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "FlowMod WhatsApp API",
+    "version": "1.0.0",
+    "description": "Complete WhatsApp Web API integration for businesses and developers.\n\n## Authentication\nAll endpoints require an API key in the header:\n```\napikey: YOUR_INSTANCE_API_KEY\n```\n\n## Example API Call\n```bash\ncurl -X GET \"https://api.flowmod.ai/instance/connectionState/FlowMod\" \\\n  -H \"apikey: 6BABB66B4BF8-437A-8643-4D19B887F1FD\" \\\n  -H \"Content-Type: application/json\"\n```\n\n**Response:**\n```json\n{\n  \"instance\": {\n    \"instanceName\": \"FlowMod\",\n    \"state\": \"open\"\n  }\n}\n```",
+    "contact": {
+      "name": "FlowMod Support",
+      "email": "dev@flowapt.com"
+    }
   },
   "servers": [
     {
       "url": "https://api.flowmod.ai",
-      "description": "FlowMod API Production Server"
+      "description": "FlowMod Production API"
     }
   ],
   "security": [
     {
-      "apiKey": []
+      "ApiKeyAuth": []
     }
   ],
-  "paths": {
-    "/instance/connectionState/{instanceName}": {
-      "get": {
-        "summary": "Check Connection Status",
-        "description": "Check the connection status of your WhatsApp instance. Returns the current state of the connection.",
-        "parameters": [
-          {
-            "name": "instanceName",
-            "in": "path",
-            "required": true,
-            "description": "The name of your FlowMod instance",
-            "schema": {
-              "type": "string",
-              "example": "my-whatsapp-instance"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Connection status retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "state": {
-                      "type": "string",
-                      "enum": ["open", "connecting", "close"],
-                      "description": "Current connection state"
-                    },
-                    "instance": {
-                      "type": "object",
-                      "properties": {
-                        "instanceName": {
-                          "type": "string",
-                          "description": "Name of the instance"
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "Instance status"
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "connected": {
-                    "summary": "Connected instance",
-                    "value": {
-                      "state": "open",
-                      "instance": {
-                        "instanceName": "my-whatsapp-instance",
-                        "status": "connected"
-                      }
-                    }
-                  },
-                  "disconnected": {
-                    "summary": "Disconnected instance",
-                    "value": {
-                      "state": "close",
-                      "instance": {
-                        "instanceName": "my-whatsapp-instance",
-                        "status": "disconnected"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid API key",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Instance not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Instance Management"]
-      }
-    },
-    "/message/sendText/{instanceName}": {
-      "post": {
-        "summary": "Send Text Message",
-        "description": "Send a text message to a WhatsApp number through your connected instance.",
-        "parameters": [
-          {
-            "name": "instanceName",
-            "in": "path",
-            "required": true,
-            "description": "The name of your FlowMod instance",
-            "schema": {
-              "type": "string",
-              "example": "my-whatsapp-instance"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["number", "text"],
-                "properties": {
-                  "number": {
-                    "type": "string",
-                    "description": "WhatsApp number in international format (without +)",
-                    "example": "1234567890"
-                  },
-                  "text": {
-                    "type": "string",
-                    "description": "Text message to send",
-                    "example": "Hello from FlowMod API!"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Message sent successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "key": {
-                      "type": "object",
-                      "properties": {
-                        "remoteJid": {
-                          "type": "string",
-                          "description": "Recipient WhatsApp ID"
-                        },
-                        "fromMe": {
-                          "type": "boolean",
-                          "description": "Whether message is from sender"
-                        },
-                        "id": {
-                          "type": "string",
-                          "description": "Message ID"
-                        }
-                      }
-                    },
-                    "message": {
-                      "type": "object",
-                      "properties": {
-                        "conversation": {
-                          "type": "string",
-                          "description": "The sent message text"
-                        }
-                      }
-                    },
-                    "messageTimestamp": {
-                      "type": "number",
-                      "description": "Unix timestamp of message"
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "Message status"
-                    }
-                  }
-                },
-                "example": {
-                  "key": {
-                    "remoteJid": "1234567890@s.whatsapp.net",
-                    "fromMe": true,
-                    "id": "3EB0C431D6C2E46E5B6F"
-                  },
-                  "message": {
-                    "conversation": "Hello from FlowMod API!"
-                  },
-                  "messageTimestamp": 1642678800,
-                  "status": "sent"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - Invalid parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid API key",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Instance not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Messaging"]
-      }
-    }
-  },
   "components": {
     "securitySchemes": {
-      "apiKey": {
+      "ApiKeyAuth": {
         "type": "apiKey",
         "in": "header",
         "name": "apikey",
-        "description": "Enter your FlowMod API key"
+        "description": "Organization-specific API key for Evolution API access"
       }
     },
     "schemas": {
+      "MessageKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique message identifier"
+          },
+          "fromMe": {
+            "type": "boolean",
+            "description": "Whether message was sent by the instance"
+          },
+          "remoteJid": {
+            "type": "string",
+            "description": "WhatsApp JID of recipient/group"
+          }
+        },
+        "required": ["id", "fromMe", "remoteJid"]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "key": { "$ref": "#/components/schemas/MessageKey" },
+          "message": {
+            "type": "object",
+            "description": "Message content object"
+          },
+          "messageTimestamp": {
+            "type": "number",
+            "description": "Unix timestamp of message"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "SENT", "RECEIVED", "READ"],
+            "description": "Message delivery status"
+          },
+          "pushName": {
+            "type": "string",
+            "description": "Display name of sender"
+          }
+        }
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "WhatsApp group ID"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Group name/subject"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Group owner JID"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "admin": {
+                  "type": "string",
+                  "enum": ["superadmin", "admin"],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "desc": {
+            "type": "string",
+            "description": "Group description"
+          },
+          "creation": {
+            "type": "number",
+            "description": "Group creation timestamp"
+          },
+          "size": {
+            "type": "number",
+            "description": "Number of participants"
+          }
+        }
+      },
       "Error": {
         "type": "object",
         "required": ["error", "message"],
@@ -292,14 +130,758 @@
       }
     }
   },
+  "paths": {
+    "/instance/connectionState/{instanceName}": {
+      "get": {
+        "tags": ["Instance Management"],
+        "summary": "Get Connection State",
+        "description": "Retrieve current connection state of the WhatsApp instance",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "WhatsApp instance identifier"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connection state retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 200 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "instance": {
+                          "type": "object",
+                          "properties": {
+                            "instanceName": { "type": "string", "example": "FlowMod" },
+                            "state": {
+                              "type": "string",
+                              "enum": ["open", "connecting", "close"],
+                              "example": "open",
+                              "description": "Current connection state"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendText/{instanceName}": {
+      "post": {
+        "tags": ["Messaging"],
+        "summary": "Send Text Message",
+        "description": "Send a text message to a WhatsApp number or group with optional features like typing delay, mentions, and replies",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Organization-specific instance identifier"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999",
+                    "description": "Phone number or group ID to send message to"
+                  },
+                  "text": {
+                    "type": "string",
+                    "example": "Hello, World!",
+                    "description": "Message text content"
+                  },
+                  "delay": {
+                    "type": "number",
+                    "example": 1200,
+                    "description": "Typing simulation delay in milliseconds"
+                  },
+                  "quoted": {
+                    "type": "object",
+                    "description": "Message to quote/reply to",
+                    "properties": {
+                      "key": { "$ref": "#/components/schemas/MessageKey" }
+                    }
+                  },
+                  "linkPreview": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable link preview for URLs"
+                  },
+                  "mentionsEveryOne": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Mention all group participants"
+                  },
+                  "mentioned": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Array of phone numbers to mention"
+                  }
+                },
+                "required": ["number", "text"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Message" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendMedia/{instanceName}": {
+      "post": {
+        "tags": ["Messaging"],
+        "summary": "Send Media Message",
+        "description": "Send image, video, audio, or document message with optional caption",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999",
+                    "description": "Phone number or group ID"
+                  },
+                  "mediatype": {
+                    "type": "string",
+                    "enum": ["image", "video", "audio", "document"],
+                    "example": "image",
+                    "description": "Type of media being sent"
+                  },
+                  "media": {
+                    "type": "string",
+                    "description": "Base64 encoded media content or URL"
+                  },
+                  "caption": {
+                    "type": "string",
+                    "example": "Media caption",
+                    "description": "Optional caption for the media"
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "example": "document.pdf",
+                    "description": "File name for documents"
+                  },
+                  "mimetype": {
+                    "type": "string",
+                    "example": "image/jpeg",
+                    "description": "MIME type of the media"
+                  }
+                },
+                "required": ["number", "mediatype", "media"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Media message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Message" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendAudio/{instanceName}": {
+      "post": {
+        "tags": ["Messaging"],
+        "summary": "Send Audio Message",
+        "description": "Send an audio message (voice note) with automatic encoding to WhatsApp format",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999",
+                    "description": "Phone number or group ID"
+                  },
+                  "audio": {
+                    "type": "string",
+                    "description": "Base64 encoded audio content or URL"
+                  },
+                  "encoding": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable automatic audio encoding to WhatsApp format"
+                  },
+                  "delay": {
+                    "type": "number",
+                    "example": 1200,
+                    "description": "Recording simulation delay in milliseconds"
+                  }
+                },
+                "required": ["number", "audio"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Audio message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Message" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendLocation/{instanceName}": {
+      "post": {
+        "tags": ["Messaging"],
+        "summary": "Send Location Message",
+        "description": "Send a location message with coordinates and optional name/address",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999"
+                  },
+                  "latitude": {
+                    "type": "number",
+                    "example": -23.5505,
+                    "description": "Latitude coordinate"
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "example": -46.6333,
+                    "description": "Longitude coordinate"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "São Paulo",
+                    "description": "Location name"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "São Paulo, Brazil",
+                    "description": "Full address"
+                  }
+                },
+                "required": ["number", "latitude", "longitude"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Location message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Message" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendPoll/{instanceName}": {
+      "post": {
+        "tags": ["Messaging"],
+        "summary": "Send Poll Message",
+        "description": "Send a poll message with multiple options for voting",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "What's your favorite color?",
+                    "description": "Poll question"
+                  },
+                  "selectableCount": {
+                    "type": "number",
+                    "example": 1,
+                    "description": "Number of options users can select"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["Red", "Blue", "Green", "Yellow"],
+                    "description": "Poll options"
+                  }
+                },
+                "required": ["number", "name", "selectableCount", "values"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Poll message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Message" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendContact/{instanceName}": {
+      "post": {
+        "tags": ["Messaging"],
+        "summary": "Send Contact Message",
+        "description": "Send contact information as a vCard",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999"
+                  },
+                  "contact": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fullName": { "type": "string", "example": "John Doe" },
+                        "wuid": { "type": "string", "example": "5511888888888" },
+                        "phoneNumber": { "type": "string", "example": "5511888888888" },
+                        "organization": { "type": "string", "example": "Company Inc" },
+                        "email": { "type": "string", "example": "john@company.com" }
+                      },
+                      "required": ["fullName", "phoneNumber"]
+                    },
+                    "description": "Array of contacts to send"
+                  }
+                },
+                "required": ["number", "contact"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Message" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendReaction/{instanceName}": {
+      "post": {
+        "tags": ["Messaging"],
+        "summary": "Send Reaction",
+        "description": "Send an emoji reaction to a message",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reactionMessage": {
+                    "type": "object",
+                    "properties": {
+                      "key": { "$ref": "#/components/schemas/MessageKey" },
+                      "text": {
+                        "type": "string",
+                        "example": "👍",
+                        "description": "Emoji reaction to send"
+                      }
+                    },
+                    "required": ["key", "text"]
+                  }
+                },
+                "required": ["reactionMessage"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reaction sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Message" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/group/create/{instanceName}": {
+      "post": {
+        "tags": ["Group Management"],
+        "summary": "Create Group",
+        "description": "Create a new WhatsApp group with participants",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subject": {
+                    "type": "string",
+                    "example": "My New Group",
+                    "description": "Group name/subject"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "This is a test group",
+                    "description": "Group description"
+                  },
+                  "participants": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["5511999999999", "5511888888888"],
+                    "description": "Array of phone numbers to add as participants"
+                  },
+                  "promoteParticipants": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to promote participants to admin"
+                  }
+                },
+                "required": ["subject", "participants"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Group created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 201 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": { "$ref": "#/components/schemas/Group" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/group/fetchAllGroups/{instanceName}": {
+      "get": {
+        "tags": ["Group Management"],
+        "summary": "List All Groups",
+        "description": "Get all WhatsApp groups for this instance with optional participant details",
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "getParticipants",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false },
+            "description": "Include participant details in response"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Groups retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "number", "example": 200 },
+                    "error": { "type": "boolean", "example": false },
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "120363000000000000@g.us",
+                            "description": "WhatsApp group ID"
+                          },
+                          "subject": {
+                            "type": "string",
+                            "example": "My New Group",
+                            "description": "Group name/subject"
+                          },
+                          "size": {
+                            "type": "number",
+                            "example": 3,
+                            "description": "Number of participants"
+                          },
+                          "owner": {
+                            "type": "string",
+                            "example": "5511999999999@s.whatsapp.net",
+                            "description": "Group owner JID"
+                          },
+                          "participants": {
+                            "type": "array",
+                            "description": "Group participants (if getParticipants=true)",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "example": "5511999999999@s.whatsapp.net"
+                                },
+                                "admin": {
+                                  "type": "string",
+                                  "enum": ["superadmin", "admin", null],
+                                  "nullable": true,
+                                  "description": "Admin role in group"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plants/{id}": {
+      "delete": {
+        "summary": "Delete Plant",
+        "description": "Delete a plant from the store.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the plant to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plant deleted successfully"
+          },
+          "404": {
+            "description": "Plant not found"
+          }
+        },
+        "tags": ["Plants"]
+      }
+    },
+    "/plant/webhook": {
+      "post": {
+        "summary": "New Plant",
+        "description": "Webhook for new plant notifications.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "plantName": {
+                    "type": "string",
+                    "description": "Name of the new plant"
+                  },
+                  "species": {
+                    "type": "string",
+                    "description": "Species of the plant"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received successfully"
+          }
+        },
+        "tags": ["Plants"]
+      }
+    }
+  },
   "tags": [
     {
       "name": "Instance Management",
-      "description": "Manage your WhatsApp instance connection and status"
+      "description": "WhatsApp instance connection and status management"
     },
     {
       "name": "Messaging",
-      "description": "Send messages through your WhatsApp instance"
+      "description": "Send various types of WhatsApp messages"
+    },
+    {
+      "name": "Group Management",
+      "description": "Create and manage WhatsApp groups and participants"
+    },
+    {
+      "name": "Plants",
+      "description": "Plant store operations"
     }
   ]
 }

@@ -1,33 +1,71 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'FlowMod WhatsApp API Documentation'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+# Welcome to FlowMod API
 
-## Welcome
+FlowMod provides a comprehensive WhatsApp Web API that allows you to integrate WhatsApp messaging functionality directly into your applications. Send messages, manage groups, handle webhooks, and more - all through a simple REST API.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## API Categories
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Our API is organized into several categories:
+
+<CardGroup cols={2}>
+  <Card title="Instance Management" icon="server">
+    Check connection status and manage your WhatsApp instance
+  </Card>
+  <Card title="Messaging" icon="message">
+    Send text, media, audio, location, polls, contacts, and reactions
+  </Card>
+  <Card title="Group Management" icon="users">
+    Create groups, manage participants, and update group settings
+  </Card>
+  <Card title="Plants" icon="leaf">
+    Sample plant store endpoints for demonstration
+  </Card>
+</CardGroup>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All FlowMod API endpoints use API key authentication. Include your API key in the header of every request:
+
+```bash
+apikey: YOUR_INSTANCE_API_KEY
+```
+
+### Example Request
+
+```bash
+curl -X GET "https://api.flowmod.ai/instance/connectionState/your-instance" \
+  -H "apikey: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+### Response Format
+
+All FlowMod endpoints return responses in a consistent format:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
+{
+  "status": 200,
+  "error": false,
+  "response": {
+    // Endpoint-specific data
   }
-]
+}
 ```
+
+## Getting Started
+
+1. **Get your API credentials** from your FlowMod dashboard
+2. **Choose an endpoint** from the categories below
+3. **Make your first API call** using the interactive playground
+
+<Card
+  title="View OpenAPI Specification"
+  icon="code"
+  href="/api-reference/openapi.json"
+>
+  Download the complete OpenAPI spec for FlowMod API
+</Card>
