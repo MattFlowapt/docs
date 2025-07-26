@@ -91,7 +91,7 @@
           "icon": "envelope"
         },
         {
-          "anchor": "FlowApt",
+          "anchor": "Flowapt",
           "href": "https://flowapt.com",
           "icon": "globe"
         }
@@ -118,7 +118,7 @@
   "footer": {
           "socials": {
         "x": "https://x.com/flowapt",
-        "github": "https://github.com/FlowApt",
+        "github": "https://github.com/flowapt",
         "linkedin": "https://linkedin.com/company/flowapt"
       }
   }
