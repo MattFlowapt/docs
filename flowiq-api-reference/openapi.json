@@ -1,18 +1,18 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FlowAPT Conversations API",
+    "title": "FlowIQ Conversations API",
     "version": "1.0.0",
     "description": "Complete WhatsApp Conversations API for retrieving messages, contacts, and conversation history.\n\n## Authentication\nAll endpoints require a Bearer token in the header:\n```\nAuthorization: Bearer YOUR_BEARER_TOKEN\n```\n\n## Example API Call\n```bash\ncurl -X GET \"https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&limit=10\" \\\n  -H \"Authorization: Bearer YOUR_BEARER_TOKEN\"\n```\n\n**Response:**\n```json\n{\n  \"success\": true,\n  \"messages\": [...],\n  \"pagination\": {\n    \"currentPage\": 1,\n    \"totalPages\": 5,\n    \"hasNextPage\": true\n  },\n  \"count\": 10\n}\n```",
     "contact": {
-      "name": "FlowAPT Support",
+      "name": "FlowIQ Support",
       "email": "dev@flowapt.com"
     }
   },
   "servers": [
     {
       "url": "https://api.flowiq.live",
-      "description": "FlowAPT Production API"
+      "description": "FlowIQ Production API"
     }
   ],
   "security": [
@@ -594,4 +594,3 @@
     }
   ]
 }
-

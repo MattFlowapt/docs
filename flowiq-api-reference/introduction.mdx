@@ -1,15 +1,15 @@
 ---
 title: 'Introduction'
-description: 'FlowAPT Conversations API Documentation'
+description: 'FlowIQ Conversations API Documentation'
 ---
 
-# Welcome to FlowAPT API
+# Welcome to FlowIQ API
 
-FlowAPT provides a powerful Conversations API that allows you to access WhatsApp conversation history, manage contacts, and search through messages programmatically. Perfect for building integrations, analytics dashboards, and automated workflows.
+FlowIQ provides a powerful Conversations API that allows you to access WhatsApp conversation history, manage contacts, and search through messages programmatically. Perfect for building integrations, analytics dashboards, and automated workflows.
 
 ## API Overview
 
-The FlowAPT Conversations API uses a single endpoint with an `action` parameter to handle different operations:
+The FlowIQ Conversations API uses a single endpoint with an `action` parameter to handle different operations:
 
 | Action | Description |
 |--------|-------------|
@@ -19,7 +19,7 @@ The FlowAPT Conversations API uses a single endpoint with an `action` parameter 
 
 ## Authentication
 
-All FlowAPT API endpoints use Bearer token authentication. Include your token in the Authorization header of every request:
+All FlowIQ API endpoints use Bearer token authentication. Include your token in the Authorization header of every request:
 
 ```bash
 Authorization: Bearer YOUR_BEARER_TOKEN
@@ -85,7 +85,7 @@ curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whats
 
 ## Response Format
 
-All FlowAPT endpoints return responses in a consistent JSON format:
+All FlowIQ endpoints return responses in a consistent JSON format:
 
 ```json
 {
@@ -122,16 +122,15 @@ API requests are subject to rate limiting. If you exceed the limit, you'll recei
   <Card
     title="Conversations API"
     icon="message"
-    href="/flowapt-api-reference/endpoint/conversations"
+    href="/flowiq-api-reference/endpoint/conversations"
   >
     Retrieve messages, list contacts, and search conversations using the action parameter
   </Card>
   <Card
     title="View OpenAPI Spec"
     icon="code"
-    href="/flowapt-api-reference/openapi.json"
+    href="/flowiq-api-reference/openapi.json"
   >
     Download the complete OpenAPI specification
   </Card>
 </CardGroup>
-

@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "FlowAPT API Documentation",
+  "name": "FlowIQ API Documentation",
   "colors": {
     "primary": "#9333EA",
     "light": "#FF6B6B",
@@ -70,15 +70,15 @@
         ]
       },
       {
-        "tab": "FlowAPT API",
+        "tab": "FlowIQ API",
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["flowapt-api-reference/introduction"]
+            "pages": ["flowiq-api-reference/introduction"]
           },
           {
             "group": "Conversations",
-            "pages": ["flowapt-api-reference/endpoint/conversations"]
+            "pages": ["flowiq-api-reference/endpoint/conversations"]
           }
         ]
       }
@@ -129,6 +129,6 @@
   },
   "openapi": [
     "api-reference/openapi.json",
-    "flowapt-api-reference/openapi.json"
+    "flowiq-api-reference/openapi.json"
   ]
 }
