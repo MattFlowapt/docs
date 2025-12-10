@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "FlowMod API Documentation",
+  "name": "FlowAPT API Documentation",
   "colors": {
     "primary": "#9333EA",
     "light": "#FF6B6B",
@@ -15,11 +15,7 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
+            "pages": ["index", "quickstart", "development"]
           },
           {
             "group": "Essentials",
@@ -35,19 +31,15 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "FlowMod API",
         "groups": [
           {
             "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
+            "pages": ["api-reference/introduction"]
           },
           {
             "group": "Instance Management",
-            "pages": [
-              "api-reference/endpoint/get"
-            ]
+            "pages": ["api-reference/endpoint/get"]
           },
           {
             "group": "Messaging",
@@ -74,6 +66,19 @@
               "api-reference/endpoint/delete",
               "api-reference/endpoint/webhook"
             ]
+          }
+        ]
+      },
+      {
+        "tab": "FlowAPT API",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["flowapt-api-reference/introduction"]
+          },
+          {
+            "group": "Conversations",
+            "pages": ["flowapt-api-reference/endpoint/conversations"]
           }
         ]
       }
@@ -116,10 +121,14 @@
     }
   },
   "footer": {
-          "socials": {
-        "x": "https://x.com/flowapt",
-        "github": "https://github.com/flowapt",
-        "linkedin": "https://linkedin.com/company/flowapt"
-      }
-  }
+    "socials": {
+      "x": "https://x.com/flowapt",
+      "github": "https://github.com/flowapt",
+      "linkedin": "https://linkedin.com/company/flowapt"
+    }
+  },
+  "openapi": [
+    "api-reference/openapi.json",
+    "flowapt-api-reference/openapi.json"
+  ]
 }

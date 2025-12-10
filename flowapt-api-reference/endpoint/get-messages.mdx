@@ -1,0 +1,132 @@
+---
+title: 'Conversations'
+openapi: 'GET /conversations'
+---
+
+<Note>
+  This single endpoint handles multiple operations via the `action` query parameter.
+</Note>
+
+## Available Actions
+
+| Action | Description | Required Parameters |
+|--------|-------------|---------------------|
+| `conversation-messages` | Get messages from a conversation (default) | `tenantId`, `whatsappNumber` or `contactId` |
+| `contacts` | List all contacts | `tenantId` |
+| `find-by-phone` | Find a contact by phone number | `tenantId`, `whatsappNumber` |
+
+---
+
+## Action: Get Conversation Messages
+
+Fetch messages from a specific conversation. This is the default action.
+
+### Basic Usage
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+### Paginated Results
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&page=2&limit=20" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+### Search Messages by Text
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&query=urgent,help" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+### Search by Shopify Order ID
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&orderId=1234567890" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+---
+
+## Action: List Contacts
+
+Retrieve a paginated list of all contacts for your organization.
+
+### Get All Contacts
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR_TENANT_ID" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+### Paginated Contacts
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR_TENANT_ID&page=2&limit=25" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+### Search Contacts by Name/Phone
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR_TENANT_ID&search=john" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+---
+
+## Action: Find Contact by Phone
+
+Look up a specific contact using their phone number.
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?action=find-by-phone&tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+<Tip>
+  Phone numbers are automatically normalized, so `+27 12 345 6789` and `27123456789` will find the same contact.
+</Tip>
+
+---
+
+## Reference Tables
+
+### Message Sender Types
+
+| Sender Type | Description |
+|-------------|-------------|
+| `user-whatsapp` | Message sent by the customer via WhatsApp |
+| `bot-whatsapp` | Automated bot response |
+| `human-whatsapp` | Message sent by a human agent |
+| `system` | System-generated message |
+
+### Message Status
+
+| Status | Description |
+|--------|-------------|
+| `sent` | Message has been sent |
+| `delivered` | Message has been delivered to recipient |
+| `read` | Message has been read by recipient |
+| `failed` | Message delivery failed |
+
+### Media Types
+
+| Media Type | Description |
+|------------|-------------|
+| `image` | Image attachment (JPEG, PNG, etc.) |
+| `video` | Video attachment |
+| `audio` | Audio message or voice note |
+| `document` | Document (PDF, DOCX, etc.) |
+| `interactive` | Interactive message (buttons, lists) |
+
+### Bot Status Values
+
+| Status | Description |
+|--------|-------------|
+| `active` | Bot is actively responding to this contact |
+| `paused` | Bot responses are paused (human takeover) |
+| `null` | No bot configured for this contact |

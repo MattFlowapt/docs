@@ -1,0 +1,137 @@
+---
+title: 'Introduction'
+description: 'FlowAPT Conversations API Documentation'
+---
+
+# Welcome to FlowAPT API
+
+FlowAPT provides a powerful Conversations API that allows you to access WhatsApp conversation history, manage contacts, and search through messages programmatically. Perfect for building integrations, analytics dashboards, and automated workflows.
+
+## API Overview
+
+The FlowAPT Conversations API uses a single endpoint with an `action` parameter to handle different operations:
+
+| Action | Description |
+|--------|-------------|
+| `conversation-messages` | Retrieve messages from a conversation (default) |
+| `contacts` | List all contacts with optional search |
+| `find-by-phone` | Find a specific contact by phone number |
+
+## Authentication
+
+All FlowAPT API endpoints use Bearer token authentication. Include your token in the Authorization header of every request:
+
+```bash
+Authorization: Bearer YOUR_BEARER_TOKEN
+```
+
+<Warning>
+  Keep your bearer token secure. Never expose it in client-side code or public repositories.
+</Warning>
+
+### Getting Your Token
+
+1. Log into your [FlowIQ Dashboard](https://app.flowiq.live)
+2. Navigate to Settings → API Keys
+3. Generate or copy your bearer token
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.flowiq.live
+```
+
+## Quick Start
+
+### Example Request
+
+Fetch the last 10 messages from a conversation:
+
+```bash
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&limit=10" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+
+### Example Response
+
+```json
+{
+  "success": true,
+  "messages": [
+    {
+      "message": "Hello! How can I help you today?",
+      "sender_type": "bot-whatsapp",
+      "created_at": "2025-01-10T14:30:00Z",
+      "message_status": "read",
+      "media_type": null,
+      "media_url": null,
+      "reactions": []
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 5,
+    "totalMessages": 48,
+    "messagesPerPage": 10,
+    "hasNextPage": true,
+    "hasPrevPage": false
+  },
+  "count": 1,
+  "filtered": false
+}
+```
+
+## Response Format
+
+All FlowAPT endpoints return responses in a consistent JSON format:
+
+```json
+{
+  "success": true,
+  "// endpoint-specific data": "...",
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 5,
+    "hasNextPage": true,
+    "hasPrevPage": false
+  }
+}
+```
+
+### Error Responses
+
+When an error occurs, the response will include:
+
+```json
+{
+  "success": false,
+  "error": "Error type",
+  "message": "Detailed error message"
+}
+```
+
+## Rate Limiting
+
+API requests are subject to rate limiting. If you exceed the limit, you'll receive a `429 Too Many Requests` response. Please implement exponential backoff in your applications.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Conversations API"
+    icon="message"
+    href="/flowapt-api-reference/endpoint/conversations"
+  >
+    Retrieve messages, list contacts, and search conversations using the action parameter
+  </Card>
+  <Card
+    title="View OpenAPI Spec"
+    icon="code"
+    href="/flowapt-api-reference/openapi.json"
+  >
+    Download the complete OpenAPI specification
+  </Card>
+</CardGroup>
+
