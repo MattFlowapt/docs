@@ -40,7 +40,12 @@
           },
           "sender_type": {
             "type": "string",
-            "enum": ["user-whatsapp", "bot-whatsapp", "human-whatsapp", "system"],
+            "enum": [
+              "user-whatsapp",
+              "bot-whatsapp",
+              "human-whatsapp",
+              "system"
+            ],
             "description": "Type of sender",
             "example": "user-whatsapp"
           },
@@ -59,7 +64,14 @@
           "media_type": {
             "type": "string",
             "nullable": true,
-            "enum": ["image", "video", "audio", "document", "interactive", null],
+            "enum": [
+              "image",
+              "video",
+              "audio",
+              "document",
+              "interactive",
+              null
+            ],
             "description": "Type of media attachment",
             "example": "image"
           },
@@ -342,7 +354,7 @@
     "/conversations": {
       "get": {
         "operationId": "getConversationMessages",
-        "tags": ["Conversations"],
+        "tags": ["Endpoints"],
         "summary": "Get Conversation Messages",
         "description": "Retrieve messages from a conversation with comprehensive filtering and search capabilities.\n\n## Default Behavior\n- **Action**: Defaults to `conversation-messages` if not specified\n- **Order**: Returns newest messages first (`ascending=false`)\n- **Limit**: Returns 10 messages per page by default\n- **Page**: Starts at page 1\n\n## Search Capabilities\n- **Text Search**: Use `query` parameter with comma-separated terms\n- **Order Search**: Use `orderId` to search by Shopify order ID\n- **Combined Search**: Use both `query` and `orderId` together",
         "parameters": [
@@ -585,11 +597,11 @@
           }
         ]
       }
-    },
+    }
   },
   "tags": [
     {
-      "name": "Conversations",
+      "name": "Endpoints",
       "description": "Conversation and contact management API endpoints"
     }
   ]
