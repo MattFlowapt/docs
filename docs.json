@@ -78,7 +78,10 @@
           },
           {
             "group": "Endpoints",
-            "pages": ["flowiq-api-reference/endpoint/conversations"]
+            "pages": [
+              "flowiq-api-reference/endpoint/conversations",
+              "flowiq-api-reference/endpoint/contact"
+            ]
           }
         ]
       }

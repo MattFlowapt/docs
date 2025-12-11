@@ -1,0 +1,295 @@
+---
+title: 'Create Contact'
+openapi: 'POST /contact'
+---
+
+<Note>
+  This endpoint creates a new contact with WhatsApp number verification. The phone number must be registered on WhatsApp.
+</Note>
+
+## Overview
+
+Create a new contact in your FlowIQ organization. The API automatically:
+- Verifies the phone number is registered on WhatsApp
+- Normalizes phone numbers for consistent storage
+- Checks for duplicate contacts
+- Parses and stores contact tags
+
+---
+
+## Authentication
+
+All requests require a Bearer token with API key format (`fiq_...`) in the Authorization header:
+
+```bash
+Authorization: Bearer fiq_YOUR_API_KEY
+```
+
+<Warning>
+  Only API keys with the `fiq_` prefix are accepted. The API key must belong to the organization specified in `tenantId`.
+</Warning>
+
+---
+
+## Basic Usage
+
+### Create a Contact
+
+```bash
+curl -X POST "https://api.flowiq.live/contact?tenantId=YOUR_TENANT_ID" \
+  -H "Authorization: Bearer fiq_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "phone_number": "+27123456789",
+    "email": "john@example.com",
+    "tags": "customer,premium,vip"
+  }'
+```
+
+### Minimal Request (Phone Only)
+
+```bash
+curl -X POST "https://api.flowiq.live/contact?tenantId=YOUR_TENANT_ID" \
+  -H "Authorization: Bearer fiq_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone_number": "+27123456789"
+  }'
+```
+
+---
+
+## Request Parameters
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `tenantId` | string | Yes | Your organization's tenant identifier (slug) |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `phone_number` | string | Yes | Phone number with country code (e.g., +27123456789) |
+| `name` | string | No | Contact's full name |
+| `email` | string | No | Contact's email address |
+| `tags` | string | No | Comma-separated tags (e.g., "customer,premium,vip") |
+
+<Tip>
+  Phone numbers are automatically cleaned and normalized. Both `+27 12 345 6789` and `27123456789` will be stored consistently.
+</Tip>
+
+---
+
+## Response Examples
+
+### Success Response (201)
+
+```json
+{
+  "success": true,
+  "message": "Contact created successfully",
+  "contact": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "full_name": "John Doe",
+    "whatsapp_id": "27123456789",
+    "phone_number": "+27123456789",
+    "email": "john@example.com",
+    "tags": ["customer", "premium", "vip"],
+    "organization_id": "org-uuid-here",
+    "created_at": "2025-12-11T10:30:00Z"
+  }
+}
+```
+
+### Error: Contact Already Exists (409)
+
+```json
+{
+  "error": "Contact already exists",
+  "message": "A contact with this phone number already exists",
+  "existing_contact": {
+    "id": "existing-uuid",
+    "full_name": "John Doe",
+    "whatsapp_id": "27123456789"
+  }
+}
+```
+
+### Error: Invalid WhatsApp Number (400)
+
+```json
+{
+  "error": "Invalid WhatsApp number",
+  "message": "The provided phone number is not registered on WhatsApp"
+}
+```
+
+### Error: Missing Phone Number (400)
+
+```json
+{
+  "error": "Missing required field",
+  "message": "phone_number is required"
+}
+```
+
+### Error: Invalid API Key (401)
+
+```json
+{
+  "error": "Invalid API key",
+  "message": "API key has been revoked"
+}
+```
+
+### Error: Tenant Mismatch (401)
+
+```json
+{
+  "error": "API key mismatch",
+  "message": "API key does not belong to the specified tenant"
+}
+```
+
+---
+
+## Phone Number Validation
+
+The API performs several validation steps:
+
+1. **Format Check**: Removes special characters, keeps only digits
+2. **Length Check**: Must be at least 10 digits (including country code)
+3. **WhatsApp Verification**: Verifies the number is registered on WhatsApp using FlowMod's verification service
+4. **Duplicate Check**: Ensures no existing contact has the same WhatsApp ID in your organization
+
+<Warning>
+  If the phone number is not registered on WhatsApp, the contact creation will fail with a 400 error.
+</Warning>
+
+---
+
+## Tag Management
+
+Tags can be provided as a comma-separated string and are automatically:
+- Split into individual tags
+- Trimmed of whitespace
+- Stored as a JSON array
+- Empty tags are filtered out
+
+**Example:**
+```json
+{
+  "tags": "customer, premium, vip, "
+}
+```
+
+**Stored as:**
+```json
+{
+  "tags": ["customer", "premium", "vip"]
+}
+```
+
+---
+
+## Contact Properties
+
+When a contact is created, the following properties are automatically set:
+
+| Property | Default Value | Description |
+|----------|---------------|-------------|
+| `bot_status` | `true` | Bot is enabled for this contact |
+| `archived` | `false` | Contact is not archived |
+| `has_unread_messages` | `false` | No unread messages initially |
+| `allow_broadcast` | `true` | Contact can receive broadcasts |
+| `active_status` | `false` | Contact is not currently active |
+| `blocked` | `false` | Contact is not blocked |
+| `source.type` | `"api"` | Contact was created via API |
+
+---
+
+## Error Codes
+
+| Status Code | Error | Description |
+|-------------|-------|-------------|
+| 201 | Success | Contact created successfully |
+| 400 | Bad Request | Missing required fields or invalid phone number |
+| 401 | Unauthorized | Invalid or expired API key |
+| 404 | Not Found | Organization with specified tenantId not found |
+| 409 | Conflict | Contact with this phone number already exists |
+| 500 | Internal Server Error | Server-side error occurred |
+
+---
+
+## Best Practices
+
+<Card title="Phone Number Format" icon="phone">
+  Always include the country code (e.g., +27 for South Africa, +1 for USA/Canada). The API handles formatting automatically.
+</Card>
+
+<Card title="Duplicate Detection" icon="shield-check">
+  Check the 409 error response to get details about the existing contact before attempting to update or create a new one.
+</Card>
+
+<Card title="Tags Organization" icon="tags">
+  Use consistent tag naming (e.g., lowercase, no spaces) for easier filtering and organization.
+</Card>
+
+<Card title="Error Handling" icon="triangle-exclamation">
+  Always handle WhatsApp verification failures gracefully - inform users that the number must be registered on WhatsApp.
+</Card>
+
+---
+
+## Integration Example
+
+```javascript
+async function createContact(tenantId, apiKey, contactData) {
+  try {
+    const response = await fetch(
+      `https://api.flowiq.live/contact?tenantId=${tenantId}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(contactData)
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // Handle specific error cases
+      if (response.status === 409) {
+        console.log('Contact already exists:', data.existing_contact);
+      } else if (response.status === 400) {
+        console.error('Invalid data:', data.message);
+      }
+      throw new Error(data.message);
+    }
+
+    return data.contact;
+  } catch (error) {
+    console.error('Failed to create contact:', error);
+    throw error;
+  }
+}
+
+// Usage
+const newContact = await createContact(
+  'your-tenant-id',
+  'fiq_your_api_key',
+  {
+    name: 'Jane Smith',
+    phone_number: '+27987654321',
+    email: 'jane@example.com',
+    tags: 'lead,website'
+  }
+);
+```
+

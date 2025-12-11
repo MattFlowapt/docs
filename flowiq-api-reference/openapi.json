@@ -347,10 +347,343 @@
           }
         },
         "required": ["success", "error"]
+      },
+      "CreateContactRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Contact's full name",
+            "example": "John Doe"
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "Phone number with country code (required)",
+            "example": "+27123456789"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Contact's email address",
+            "example": "john@example.com"
+          },
+          "tags": {
+            "type": "string",
+            "description": "Comma-separated tags",
+            "example": "customer,premium,vip"
+          }
+        },
+        "required": ["phone_number"]
+      },
+      "CreateContactResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the request was successful",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Contact created successfully"
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Contact unique identifier",
+                "example": "123e4567-e89b-12d3-a456-426614174000"
+              },
+              "full_name": {
+                "type": "string",
+                "nullable": true,
+                "description": "Contact full name",
+                "example": "John Doe"
+              },
+              "whatsapp_id": {
+                "type": "string",
+                "description": "WhatsApp number (normalized, no special characters)",
+                "example": "27123456789"
+              },
+              "phone_number": {
+                "type": "string",
+                "description": "Original phone number format",
+                "example": "+27123456789"
+              },
+              "email": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "description": "Contact email address",
+                "example": "john@example.com"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Contact tags",
+                "example": ["customer", "premium", "vip"]
+              },
+              "organization_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Organization UUID",
+                "example": "org-uuid-here"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Contact creation timestamp",
+                "example": "2025-12-11T10:30:00Z"
+              }
+            },
+            "required": [
+              "id",
+              "whatsapp_id",
+              "phone_number",
+              "organization_id",
+              "created_at"
+            ]
+          }
+        },
+        "required": ["success", "message", "contact"]
+      },
+      "ContactExistsResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Contact already exists"
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message",
+            "example": "A contact with this phone number already exists"
+          },
+          "existing_contact": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Existing contact ID",
+                "example": "existing-uuid"
+              },
+              "full_name": {
+                "type": "string",
+                "nullable": true,
+                "description": "Existing contact name",
+                "example": "John Doe"
+              },
+              "whatsapp_id": {
+                "type": "string",
+                "description": "Existing contact WhatsApp ID",
+                "example": "27123456789"
+              }
+            }
+          }
+        },
+        "required": ["error", "message", "existing_contact"]
       }
     }
   },
   "paths": {
+    "/contact": {
+      "post": {
+        "operationId": "createContact",
+        "tags": ["Endpoints"],
+        "summary": "Create Contact",
+        "description": "Create a new contact with WhatsApp number verification. The phone number must be registered on WhatsApp and will be verified using FlowMod's verification service.\n\n## Key Features\n- Automatic WhatsApp number verification\n- Phone number normalization\n- Duplicate detection\n- Tag parsing from comma-separated strings\n- API key authentication with organization validation",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Organization tenant identifier (slug)",
+            "example": "your-org-tenant-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactRequest"
+              },
+              "examples": {
+                "full-contact": {
+                  "summary": "Complete Contact Information",
+                  "value": {
+                    "name": "John Doe",
+                    "phone_number": "+27123456789",
+                    "email": "john@example.com",
+                    "tags": "customer,premium,vip"
+                  }
+                },
+                "minimal-contact": {
+                  "summary": "Minimal Required Fields",
+                  "value": {
+                    "phone_number": "+27123456789"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateContactResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "Contact created successfully",
+                  "contact": {
+                    "id": "123e4567-e89b-12d3-a456-426614174000",
+                    "full_name": "John Doe",
+                    "whatsapp_id": "27123456789",
+                    "phone_number": "+27123456789",
+                    "email": "john@example.com",
+                    "tags": ["customer", "premium", "vip"],
+                    "organization_id": "org-uuid-here",
+                    "created_at": "2025-12-11T10:30:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid or missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missing-phone": {
+                    "summary": "Missing Phone Number",
+                    "value": {
+                      "error": "Missing required field",
+                      "message": "phone_number is required"
+                    }
+                  },
+                  "invalid-whatsapp": {
+                    "summary": "Invalid WhatsApp Number",
+                    "value": {
+                      "error": "Invalid WhatsApp number",
+                      "message": "The provided phone number is not registered on WhatsApp"
+                    }
+                  },
+                  "invalid-format": {
+                    "summary": "Invalid Phone Format",
+                    "value": {
+                      "error": "Invalid phone number",
+                      "message": "Phone number must include country code and be at least 10 digits"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key or tenant mismatch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid-key": {
+                    "summary": "Invalid API Key",
+                    "value": {
+                      "error": "Invalid API key",
+                      "message": "API key has been revoked"
+                    }
+                  },
+                  "wrong-format": {
+                    "summary": "Wrong Token Format",
+                    "value": {
+                      "error": "Invalid token format",
+                      "message": "Bearer token must be an API key (fiq_...)"
+                    }
+                  },
+                  "tenant-mismatch": {
+                    "summary": "Tenant Mismatch",
+                    "value": {
+                      "error": "API key mismatch",
+                      "message": "API key does not belong to the specified tenant"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Organization not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Organization not found",
+                  "message": "No organization found with tenantId: YOUR_TENANT_ID"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - Contact already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactExistsResponse"
+                },
+                "example": {
+                  "error": "Contact already exists",
+                  "message": "A contact with this phone number already exists",
+                  "existing_contact": {
+                    "id": "existing-uuid",
+                    "full_name": "John Doe",
+                    "whatsapp_id": "27123456789"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Internal server error",
+                  "message": "Failed to create contact"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/conversations": {
       "get": {
         "operationId": "getConversationMessages",
