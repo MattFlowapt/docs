@@ -77,7 +77,7 @@
             "pages": ["flowiq-api-reference/introduction"]
           },
           {
-            "group": "Conversations",
+            "group": "Endpoints",
             "pages": ["flowiq-api-reference/endpoint/conversations"]
           }
         ]
