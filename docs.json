@@ -15,7 +15,12 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["index", "quickstart", "development"]
+            "pages": [
+              "index",
+              "quickstart",
+              "flowiq-index",
+              "flowiq-quickstart"
+            ]
           },
           {
             "group": "Essentials",
@@ -130,8 +135,5 @@
       "linkedin": "https://linkedin.com/company/flowapt"
     }
   },
-  "openapi": [
-    "api-reference/openapi.json",
-    "flowiq-api-reference/openapi.json"
-  ]
+  "openapi": ["api-reference/openapi.json", "flowiq-api-reference/openapi.json"]
 }

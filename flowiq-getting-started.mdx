@@ -1,0 +1,586 @@
+---
+title: FlowIQ Getting Started
+description: Access and analyze your WhatsApp conversation data with FlowIQ Conversations API.
+---
+
+## What is FlowIQ?
+
+FlowIQ is our Conversations API that provides complete access to your WhatsApp conversation history, contact management, and analytics data. While FlowMod focuses on sending messages, FlowIQ specializes in retrieving and analyzing conversation data.
+
+<CardGroup cols={2}>
+  <Card title="Message Retrieval" icon="message" iconType="duotone">
+    Access complete conversation history with pagination and search
+  </Card>
+  <Card title="Contact Management" icon="address-book" iconType="duotone">
+    List, search, and manage your WhatsApp contacts
+  </Card>
+  <Card title="Analytics Ready" icon="chart-line" iconType="duotone">
+    Structure data for business intelligence and reporting
+  </Card>
+  <Card title="Real-time Access" icon="bolt" iconType="duotone">
+    Retrieve the latest conversation data via REST API
+  </Card>
+</CardGroup>
+
+## Quick Example
+
+<CodeGroup>
+```javascript JavaScript
+// Retrieve conversation messages
+const response = await fetch(
+  'https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&limit=10',
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_BEARER_TOKEN'
+    }
+  }
+);
+
+const data = await response.json();
+console.log('Messages:', data.messages);
+console.log('Total:', data.pagination.totalMessages);
+```
+
+```python Python
+import requests
+
+# Retrieve conversation messages
+response = requests.get(
+    'https://api.flowiq.live/conversations',
+    headers={'Authorization': 'Bearer YOUR_BEARER_TOKEN'},
+    params={
+        'tenantId': 'YOUR_TENANT_ID',
+        'whatsappNumber': '27123456789',
+        'limit': 10
+    }
+)
+
+data = response.json()
+print('Messages:', data['messages'])
+print('Total:', data['pagination']['totalMessages'])
+```
+
+```bash cURL
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&limit=10" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+</CodeGroup>
+
+## Getting Started in 4 Steps
+
+<Steps>
+  <Step title="Create FlowIQ Account">
+    Sign up at [app.flowiq.live](https://app.flowiq.live) and connect your WhatsApp number
+  </Step>
+  <Step title="Get API Credentials">
+    Navigate to Settings → API Keys to generate your bearer token and find your Tenant ID
+  </Step>
+  <Step title="Make Your First API Call">
+    Use the REST API to retrieve conversation messages or contacts
+  </Step>
+  <Step title="Build Your Integration">
+    Integrate conversation data into your applications, dashboards, or workflows
+  </Step>
+</Steps>
+
+## Key Features
+
+### 1. Complete Conversation History
+
+Access all messages from any WhatsApp conversation with rich metadata including:
+- **Message content** - Text, media URLs, and document links
+- **Sender information** - User, bot, human agent, or system messages
+- **Status tracking** - Sent, delivered, read, or failed
+- **Timestamps** - Precise message timing for analytics
+- **Media types** - Images, videos, audio, documents, and more
+- **Voice transcriptions** - Automated transcription of voice notes
+- **Reactions** - Emoji reactions and engagement metrics
+
+### 2. Advanced Contact Management
+
+Manage and search your WhatsApp contacts:
+- **List all contacts** with pagination support
+- **Search by name or phone number** for quick lookups
+- **Contact details** including profile pictures and last message
+- **Unread counts** to track pending conversations
+- **Phone number lookup** for specific contact retrieval
+
+### 3. Analytics & Reporting
+
+Build powerful analytics with structured data:
+- **Message patterns** and conversation flow analysis
+- **Response time metrics** for support teams
+- **Engagement tracking** through reactions and read status
+- **Media analysis** to understand content types
+- **Agent performance** with assignee tracking
+
+## API Capabilities
+
+<AccordionGroup>
+  <Accordion title="Conversation Messages API" icon="message">
+    Retrieve messages from any WhatsApp conversation with filtering, pagination, and search.
+    
+    **Key Parameters:**
+    - `tenantId` - Your FlowIQ tenant identifier
+    - `whatsappNumber` - The WhatsApp number for the conversation
+    - `limit` - Number of messages per page (default: 10, max: 100)
+    - `page` - Page number for pagination
+    - `search` - Search query to filter messages
+    
+    **Response Includes:**
+    - Message content and metadata
+    - Sender type and status
+    - Media URLs and types
+    - Voice note transcriptions
+    - Reactions and assignees
+    - Complete pagination information
+  </Accordion>
+
+  <Accordion title="Contact Listing API" icon="address-book">
+    List all your WhatsApp contacts with search and pagination capabilities.
+    
+    **Key Parameters:**
+    - `action=contacts` - Specifies contact listing action
+    - `tenantId` - Your FlowIQ tenant identifier
+    - `limit` - Number of contacts per page
+    - `page` - Page number
+    - `search` - Search by name or phone
+    
+    **Response Includes:**
+    - Contact name and number
+    - Profile picture URL
+    - Last message and timestamp
+    - Unread message count
+    - Pagination metadata
+  </Accordion>
+
+  <Accordion title="Phone Lookup API" icon="search">
+    Find a specific contact by their WhatsApp phone number.
+    
+    **Key Parameters:**
+    - `action=find-by-phone` - Specifies lookup action
+    - `tenantId` - Your FlowIQ tenant identifier
+    - `phoneNumber` - WhatsApp number to lookup
+    
+    **Response Includes:**
+    - Contact name and details
+    - Profile picture URL
+    - Success/error status
+  </Accordion>
+</AccordionGroup>
+
+## Use Cases
+
+<CardGroup cols={2}>
+  <Card title="Customer Support Analytics" icon="headset">
+    Build dashboards to analyze support conversations, measure response times, and track customer satisfaction metrics.
+  </Card>
+  <Card title="CRM Integration" icon="database">
+    Automatically sync WhatsApp conversations with your CRM system for unified customer data management.
+  </Card>
+  <Card title="Automated Reporting" icon="chart-bar">
+    Generate daily, weekly, or monthly reports of conversation metrics, engagement, and team performance.
+  </Card>
+  <Card title="Message Search & Discovery" icon="magnifying-glass">
+    Search through conversation history to find specific information, orders, or customer requests.
+  </Card>
+  <Card title="Business Intelligence" icon="lightbulb">
+    Analyze conversation patterns, customer behavior, and trends for strategic decision-making.
+  </Card>
+  <Card title="Workflow Automation" icon="gears">
+    Trigger automated workflows based on conversation events, message content, or contact actions.
+  </Card>
+</CardGroup>
+
+## Authentication
+
+All FlowIQ API requests require Bearer token authentication:
+
+```
+Authorization: Bearer YOUR_BEARER_TOKEN
+```
+
+<Warning>
+  **Security Best Practices:**
+  - Never expose your bearer token in client-side code
+  - Store credentials in environment variables
+  - Implement token rotation regularly
+  - Use HTTPS for all API calls
+  - Monitor API usage for suspicious activity
+</Warning>
+
+### Getting Your Credentials
+
+<Steps>
+  <Step title="Login to Dashboard">
+    Go to [app.flowiq.live](https://app.flowiq.live) and sign in
+  </Step>
+  <Step title="Navigate to API Settings">
+    Click on Settings → API Keys or Developer Settings
+  </Step>
+  <Step title="Generate Bearer Token">
+    Create a new bearer token or copy your existing one
+  </Step>
+  <Step title="Find Tenant ID">
+    Your Tenant ID is displayed in Settings or Account Information
+  </Step>
+  <Step title="Secure Your Credentials">
+    Store them securely - never commit to version control
+  </Step>
+</Steps>
+
+## Understanding Message Data
+
+### Sender Types
+
+FlowIQ identifies different message sources:
+
+| Type             | Description                    | Use Case                    |
+| ---------------- | ------------------------------ | --------------------------- |
+| `user-whatsapp`  | Message from the end user      | Customer messages           |
+| `bot-whatsapp`   | Automated bot response         | AI or chatbot replies       |
+| `human-whatsapp` | Message from a human agent     | Support team responses      |
+| `system`         | System notification or message | Status updates, system info |
+
+### Media Types
+
+| Type          | Description                          | Example Use Case         |
+| ------------- | ------------------------------------ | ------------------------ |
+| `image`       | Image files (JPG, PNG, etc.)         | Product photos           |
+| `video`       | Video files                          | Demo videos              |
+| `audio`       | Audio files or voice notes           | Voice messages           |
+| `document`    | Documents (PDF, DOCX, etc.)          | Contracts, invoices      |
+| `interactive` | Interactive messages (buttons, etc.) | Menu selections          |
+| `null`        | Text-only message                    | Regular text chat        |
+
+### Message Status
+
+| Status      | Description                    | Meaning                      |
+| ----------- | ------------------------------ | ---------------------------- |
+| `sent`      | Message sent successfully      | In transit                   |
+| `delivered` | Message delivered to recipient | Reached recipient device     |
+| `read`      | Message read by recipient      | Recipient opened message     |
+| `failed`    | Message failed to send         | Error occurred during send   |
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use Pagination" icon="layer-group">
+    Always use `limit` and `page` parameters to avoid overwhelming responses and improve performance.
+  </Card>
+  <Card title="Implement Caching" icon="database">
+    Cache frequently accessed conversation data to reduce API calls and improve response times.
+  </Card>
+  <Card title="Error Handling" icon="triangle-exclamation">
+    Always check the `success` field in responses and implement retry logic with exponential backoff.
+  </Card>
+  <Card title="Rate Limiting" icon="gauge-high">
+    Monitor rate limit headers and implement backoff strategies to avoid hitting limits.
+  </Card>
+  <Card title="Search Efficiently" icon="magnifying-glass">
+    Use search parameters to filter data at the API level rather than filtering large datasets locally.
+  </Card>
+  <Card title="Monitor Usage" icon="chart-line">
+    Track your API usage patterns to optimize performance and identify potential issues early.
+  </Card>
+</CardGroup>
+
+## Complete Example Application
+
+Here's a complete example showing common FlowIQ operations:
+
+<CodeGroup>
+```javascript JavaScript
+class FlowIQClient {
+  constructor(bearerToken, tenantId) {
+    this.baseUrl = 'https://api.flowiq.live';
+    this.token = bearerToken;
+    this.tenantId = tenantId;
+  }
+
+  // Get conversation messages
+  async getConversations(whatsappNumber, options = {}) {
+    const { limit = 10, page = 1, search = '' } = options;
+    const params = new URLSearchParams({
+      tenantId: this.tenantId,
+      whatsappNumber,
+      limit,
+      page,
+      ...(search && { search })
+    });
+
+    const response = await fetch(
+      `${this.baseUrl}/conversations?${params}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+
+    return await response.json();
+  }
+
+  // List all contacts
+  async listContacts(options = {}) {
+    const { limit = 20, page = 1, search = '' } = options;
+    const params = new URLSearchParams({
+      action: 'contacts',
+      tenantId: this.tenantId,
+      limit,
+      page,
+      ...(search && { search })
+    });
+
+    const response = await fetch(
+      `${this.baseUrl}/conversations?${params}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      }
+    );
+
+    return await response.json();
+  }
+
+  // Find contact by phone
+  async findContactByPhone(phoneNumber) {
+    const params = new URLSearchParams({
+      action: 'find-by-phone',
+      tenantId: this.tenantId,
+      phoneNumber
+    });
+
+    const response = await fetch(
+      `${this.baseUrl}/conversations?${params}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      }
+    );
+
+    return await response.json();
+  }
+
+  // Fetch all messages (handles pagination)
+  async getAllMessages(whatsappNumber) {
+    let allMessages = [];
+    let currentPage = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const data = await this.getConversations(whatsappNumber, {
+        limit: 50,
+        page: currentPage
+      });
+
+      allMessages = allMessages.concat(data.messages);
+      hasMore = data.pagination.hasNextPage;
+      currentPage++;
+    }
+
+    return allMessages;
+  }
+}
+
+// Usage Example
+const client = new FlowIQClient(
+  'YOUR_BEARER_TOKEN',
+  'YOUR_TENANT_ID'
+);
+
+// Get recent messages
+const conversations = await client.getConversations('27123456789', {
+  limit: 20,
+  page: 1
+});
+console.log('Recent messages:', conversations.messages);
+
+// Search contacts
+const contacts = await client.listContacts({ search: 'John' });
+console.log('Found contacts:', contacts.contacts);
+
+// Lookup specific contact
+const contact = await client.findContactByPhone('27123456789');
+console.log('Contact details:', contact.contact);
+
+// Get all messages (with automatic pagination)
+const allMessages = await client.getAllMessages('27123456789');
+console.log('Total messages retrieved:', allMessages.length);
+```
+
+```python Python
+import requests
+from typing import Optional, Dict, List
+from urllib.parse import urlencode
+
+class FlowIQClient:
+    def __init__(self, bearer_token: str, tenant_id: str):
+        self.base_url = 'https://api.flowiq.live'
+        self.token = bearer_token
+        self.tenant_id = tenant_id
+        self.headers = {'Authorization': f'Bearer {bearer_token}'}
+    
+    def get_conversations(
+        self,
+        whatsapp_number: str,
+        limit: int = 10,
+        page: int = 1,
+        search: Optional[str] = None
+    ) -> Dict:
+        """Get conversation messages"""
+        params = {
+            'tenantId': self.tenant_id,
+            'whatsappNumber': whatsapp_number,
+            'limit': limit,
+            'page': page
+        }
+        if search:
+            params['search'] = search
+        
+        response = requests.get(
+            f'{self.base_url}/conversations',
+            headers=self.headers,
+            params=params
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def list_contacts(
+        self,
+        limit: int = 20,
+        page: int = 1,
+        search: Optional[str] = None
+    ) -> Dict:
+        """List all contacts"""
+        params = {
+            'action': 'contacts',
+            'tenantId': self.tenant_id,
+            'limit': limit,
+            'page': page
+        }
+        if search:
+            params['search'] = search
+        
+        response = requests.get(
+            f'{self.base_url}/conversations',
+            headers=self.headers,
+            params=params
+        )
+        return response.json()
+    
+    def find_contact_by_phone(self, phone_number: str) -> Dict:
+        """Find contact by phone number"""
+        params = {
+            'action': 'find-by-phone',
+            'tenantId': self.tenant_id,
+            'phoneNumber': phone_number
+        }
+        
+        response = requests.get(
+            f'{self.base_url}/conversations',
+            headers=self.headers,
+            params=params
+        )
+        return response.json()
+    
+    def get_all_messages(self, whatsapp_number: str) -> List[Dict]:
+        """Fetch all messages with automatic pagination"""
+        all_messages = []
+        current_page = 1
+        has_more = True
+        
+        while has_more:
+            data = self.get_conversations(
+                whatsapp_number,
+                limit=50,
+                page=current_page
+            )
+            
+            all_messages.extend(data['messages'])
+            has_more = data['pagination']['hasNextPage']
+            current_page += 1
+        
+        return all_messages
+
+# Usage Example
+client = FlowIQClient(
+    bearer_token='YOUR_BEARER_TOKEN',
+    tenant_id='YOUR_TENANT_ID'
+)
+
+# Get recent messages
+conversations = client.get_conversations(
+    '27123456789',
+    limit=20,
+    page=1
+)
+print('Recent messages:', conversations['messages'])
+
+# Search contacts
+contacts = client.list_contacts(search='John')
+print('Found contacts:', contacts['contacts'])
+
+# Lookup specific contact
+contact = client.find_contact_by_phone('27123456789')
+print('Contact details:', contact['contact'])
+
+# Get all messages (with automatic pagination)
+all_messages = client.get_all_messages('27123456789')
+print('Total messages retrieved:', len(all_messages))
+```
+</CodeGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Complete Quickstart"
+    icon="rocket"
+    href="/flowiq-api-reference/quickstart"
+  >
+    Detailed step-by-step guide with more examples and use cases
+  </Card>
+  <Card
+    title="API Reference"
+    icon="book"
+    href="/flowiq-api-reference/introduction"
+  >
+    Complete API documentation with authentication details
+  </Card>
+  <Card
+    title="Conversations Endpoint"
+    icon="message"
+    href="/flowiq-api-reference/endpoint/conversations"
+  >
+    Full endpoint documentation with all parameters and responses
+  </Card>
+  <Card
+    title="Contact Management"
+    icon="address-book"
+    href="/flowiq-api-reference/endpoint/contact"
+  >
+    Learn about contact management capabilities
+  </Card>
+</CardGroup>
+
+## Support
+
+<CardGroup cols={3}>
+  <Card title="Dashboard" icon="square-terminal" href="https://app.flowiq.live">
+    Access your FlowIQ dashboard
+  </Card>
+  <Card title="Support" icon="envelope" href="mailto:dev@flowapt.com">
+    Email our development team
+  </Card>
+  <Card title="Flowapt" icon="globe" href="https://flowapt.com">
+    Visit our main website
+  </Card>
+</CardGroup>
+

@@ -1,0 +1,117 @@
+---
+title: FlowIQ API Documentation
+description: Access and analyze your WhatsApp conversation data with FlowIQ.
+---
+
+## Quick Example
+
+<CodeGroup>
+```javascript JavaScript
+// Retrieve conversation messages
+const response = await fetch(
+  'https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&limit=10',
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_BEARER_TOKEN'
+    }
+  }
+);
+
+const data = await response.json();
+console.log('Messages:', data.messages);
+console.log('Total:', data.pagination.totalMessages);
+```
+
+```python Python
+import requests
+
+# Retrieve conversation messages
+response = requests.get(
+    'https://api.flowiq.live/conversations',
+    headers={'Authorization': 'Bearer YOUR_BEARER_TOKEN'},
+    params={
+        'tenantId': 'YOUR_TENANT_ID',
+        'whatsappNumber': '27123456789',
+        'limit': 10
+    }
+)
+
+data = response.json()
+print('Messages:', data['messages'])
+print('Total:', data['pagination']['totalMessages'])
+```
+
+```bash cURL
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&limit=10" \
+  -H "Authorization: Bearer YOUR_BEARER_TOKEN"
+```
+</CodeGroup>
+
+# Get started in seconds
+
+Connect your WhatsApp and instantly access complete conversation history, contact management, and analytics data through our REST API.
+
+## API Capabilities
+
+<CardGroup cols={2}>
+  <Card title="Message Retrieval" icon="message" iconType="duotone">
+    Access complete conversation history with pagination and search
+  </Card>
+  <Card title="Contact Management" icon="address-book" iconType="duotone">
+    List, search, and manage your WhatsApp contacts
+  </Card>
+  <Card title="Analytics Ready" icon="chart-line" iconType="duotone">
+    Structure data for business intelligence and reporting
+  </Card>
+  <Card title="Real-time Access" icon="bolt" iconType="duotone">
+    Retrieve the latest conversation data via REST API
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+<Steps>
+  <Step title="Create FlowIQ Account">
+    Sign up at [app.flowiq.live](https://app.flowiq.live) and connect your WhatsApp
+  </Step>
+  <Step title="Get API Credentials">
+    Navigate to Settings → API Keys to get your bearer token and tenant ID
+  </Step>
+  <Step title="Connect WhatsApp">
+    Link your WhatsApp number through the dashboard
+  </Step>
+  <Step title="Start Coding">
+    Use the API to retrieve conversations and build integrations
+  </Step>
+</Steps>
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-test.png"
+  alt="Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-test.png"
+  alt="Hero Dark"
+/>
+
+## Documentation
+
+<CardGroup cols={2}>
+  <Card
+    title="Quick Start"
+    icon="play"
+    href="/flowiq-quickstart"
+  >
+    Retrieve your first conversation in 5 minutes
+  </Card>
+  <Card
+    title="API Reference"
+    icon="book"
+    href="/flowiq-api-reference/introduction"
+  >
+    Complete endpoint documentation
+  </Card>
+</CardGroup>
+

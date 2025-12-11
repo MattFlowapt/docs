@@ -1,0 +1,444 @@
+---
+title: FlowIQ Overview
+description: Comprehensive WhatsApp Conversations API for accessing chat history, contacts, and analytics.
+---
+
+# Welcome to FlowIQ
+
+FlowIQ provides a powerful Conversations API that enables you to access and analyze WhatsApp conversation data programmatically. Build integrations, create analytics dashboards, automate workflows, and manage customer interactions at scale.
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-test.png"
+  alt="FlowIQ Dashboard"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-test.png"
+  alt="FlowIQ Dashboard Dark"
+/>
+
+## What is FlowIQ?
+
+FlowIQ is an enterprise-grade API platform that provides:
+- **Complete conversation history** - Access all WhatsApp messages, including text, media, and metadata
+- **Contact management** - Search, filter, and manage your WhatsApp contacts
+- **Real-time data access** - Retrieve the latest conversation data via REST API
+- **Advanced search** - Find specific messages and contacts quickly
+- **Analytics ready** - Structure data for business intelligence and reporting
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Message Retrieval" icon="message" iconType="duotone">
+    Access complete conversation history with pagination, filtering, and search capabilities
+  </Card>
+  <Card title="Contact Management" icon="address-book" iconType="duotone">
+    List, search, and find contacts with detailed information and conversation metadata
+  </Card>
+  <Card title="Media Support" icon="image" iconType="duotone">
+    Retrieve URLs for images, videos, documents, and voice notes shared in conversations
+  </Card>
+  <Card title="Message Status" icon="check-double" iconType="duotone">
+    Track message delivery status: sent, delivered, read, or failed
+  </Card>
+  <Card title="Sender Types" icon="users" iconType="duotone">
+    Identify message sources: user, bot, human agent, or system notifications
+  </Card>
+  <Card title="Voice Transcriptions" icon="microphone" iconType="duotone">
+    Access automated transcriptions of voice notes sent in conversations
+  </Card>
+  <Card title="Reactions & Engagement" icon="heart" iconType="duotone">
+    View emoji reactions and engagement metrics for messages
+  </Card>
+  <Card title="Assignee Tracking" icon="user-tag" iconType="duotone">
+    See which team members are assigned to conversations
+  </Card>
+</CardGroup>
+
+## Use Cases
+
+### Customer Support Analytics
+Build dashboards to analyze support conversations, response times, and customer satisfaction.
+
+```javascript
+// Example: Fetch all conversations for analytics
+const response = await fetch(
+  'https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&limit=100',
+  {
+    headers: { 'Authorization': 'Bearer YOUR_TOKEN' }
+  }
+);
+
+const data = await response.json();
+// Analyze message patterns, response times, etc.
+```
+
+### CRM Integration
+Sync WhatsApp conversations with your CRM system automatically.
+
+```python
+# Example: Sync contacts to CRM
+import requests
+
+contacts = requests.get(
+    'https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR_TENANT_ID',
+    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+).json()
+
+for contact in contacts['contacts']:
+    sync_to_crm(contact)
+```
+
+### Automated Reporting
+Generate daily, weekly, or monthly reports of conversation metrics.
+
+```javascript
+// Example: Generate daily report
+async function generateDailyReport(tenantId, date) {
+  const conversations = await fetchConversationsByDate(tenantId, date);
+  
+  const metrics = {
+    totalMessages: conversations.length,
+    byType: countBySenderType(conversations),
+    mediaMessages: countMediaMessages(conversations),
+    averageResponseTime: calculateResponseTime(conversations)
+  };
+  
+  return generateReport(metrics);
+}
+```
+
+### Message Search & Discovery
+Search through conversation history to find specific information.
+
+```bash
+# Example: Search for specific keywords in conversations
+curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&search=order" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## How It Works
+
+<Steps>
+  <Step title="Connect WhatsApp">
+    Connect your WhatsApp number to FlowIQ through the dashboard at [app.flowiq.live](https://app.flowiq.live)
+  </Step>
+  <Step title="Get API Credentials">
+    Generate your bearer token and note your tenant ID from the dashboard settings
+  </Step>
+  <Step title="Make API Calls">
+    Use the REST API to retrieve conversations, contacts, and message data
+  </Step>
+  <Step title="Build Your Integration">
+    Integrate the data into your applications, dashboards, or automated workflows
+  </Step>
+</Steps>
+
+## API Capabilities
+
+### 1. Conversation Messages
+
+Retrieve complete message history with rich metadata:
+
+```json
+{
+  "message": "Hello! How can I help you?",
+  "sender_type": "bot-whatsapp",
+  "created_at": "2025-01-10T14:30:00Z",
+  "message_status": "read",
+  "media_type": "image",
+  "media_url": "https://example.com/image.jpg",
+  "reactions": [{"emoji": "👍", "sender": "27123456789"}],
+  "voice_note_transcription": null,
+  "assignee": "user-uuid-123"
+}
+```
+
+**Key Parameters:**
+- `tenantId` - Your FlowIQ tenant identifier
+- `whatsappNumber` - The WhatsApp number for the conversation
+- `limit` - Number of messages per page (default: 10)
+- `page` - Page number for pagination
+- `search` - Search query to filter messages
+
+### 2. Contact Listing
+
+Get all contacts with pagination and search:
+
+```json
+{
+  "contact_name": "John Doe",
+  "whatsapp_number": "27123456789",
+  "last_message": "Thanks for your help!",
+  "last_message_time": "2025-01-10T15:45:00Z",
+  "unread_count": 2,
+  "profile_picture_url": "https://example.com/profile.jpg"
+}
+```
+
+**Key Parameters:**
+- `action=contacts` - Specifies contact listing action
+- `tenantId` - Your FlowIQ tenant identifier
+- `limit` - Number of contacts per page
+- `page` - Page number
+- `search` - Search by name or phone number
+
+### 3. Phone Lookup
+
+Find a specific contact by phone number:
+
+```json
+{
+  "success": true,
+  "contact": {
+    "contact_name": "Jane Smith",
+    "whatsapp_number": "27987654321",
+    "profile_picture_url": "https://example.com/profile.jpg"
+  }
+}
+```
+
+**Key Parameters:**
+- `action=find-by-phone` - Specifies phone lookup action
+- `tenantId` - Your FlowIQ tenant identifier
+- `phoneNumber` - WhatsApp number to lookup
+
+## Authentication
+
+All API requests require Bearer token authentication:
+
+```bash
+Authorization: Bearer YOUR_BEARER_TOKEN
+```
+
+<Warning>
+  **Security Best Practices:**
+  - Never expose your bearer token in client-side code
+  - Use environment variables to store credentials
+  - Implement token rotation regularly
+  - Monitor API usage for suspicious activity
+</Warning>
+
+### Getting Your Credentials
+
+1. **Login** to [app.flowiq.live](https://app.flowiq.live)
+2. Navigate to **Settings → API Keys**
+3. **Generate** or copy your bearer token
+4. Find your **Tenant ID** in account settings
+
+## Rate Limits & Performance
+
+FlowIQ API implements rate limiting to ensure fair usage and optimal performance:
+
+- **Default Rate Limit:** 100 requests per minute
+- **Burst Allowance:** 150 requests per minute for short bursts
+- **Rate Limit Headers:** Included in all responses
+
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1641492000
+```
+
+### Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use Pagination" icon="layer-group">
+    Request data in smaller chunks using `limit` and `page` parameters
+  </Card>
+  <Card title="Implement Caching" icon="database">
+    Cache frequently accessed data to reduce API calls
+  </Card>
+  <Card title="Exponential Backoff" icon="clock">
+    Implement retry logic with exponential backoff for failed requests
+  </Card>
+  <Card title="Batch Operations" icon="boxes-stacked">
+    Group multiple operations when possible to minimize API calls
+  </Card>
+</CardGroup>
+
+## Response Format
+
+All FlowIQ endpoints return responses in a consistent JSON format:
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "messages": [...],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 10,
+    "totalMessages": 98,
+    "messagesPerPage": 10,
+    "hasNextPage": true,
+    "hasPrevPage": false
+  },
+  "count": 10,
+  "filtered": false
+}
+```
+
+### Error Response
+
+```json
+{
+  "success": false,
+  "error": "AuthenticationError",
+  "message": "Invalid bearer token provided"
+}
+```
+
+## Quick Start Example
+
+Here's a complete example to get you started:
+
+<CodeGroup>
+```javascript JavaScript
+const FlowIQ = {
+  baseUrl: 'https://api.flowiq.live',
+  token: 'YOUR_BEARER_TOKEN',
+  tenantId: 'YOUR_TENANT_ID',
+
+  async getConversations(whatsappNumber, limit = 10, page = 1) {
+    const url = `${this.baseUrl}/conversations?tenantId=${this.tenantId}&whatsappNumber=${whatsappNumber}&limit=${limit}&page=${page}`;
+    
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+
+    return await response.json();
+  },
+
+  async getContacts(search = '', limit = 20, page = 1) {
+    const url = `${this.baseUrl}/conversations?action=contacts&tenantId=${this.tenantId}&search=${encodeURIComponent(search)}&limit=${limit}&page=${page}`;
+    
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+
+    return await response.json();
+  }
+};
+
+// Usage
+const conversations = await FlowIQ.getConversations('27123456789');
+console.log(conversations.messages);
+
+const contacts = await FlowIQ.getContacts('John');
+console.log(contacts.contacts);
+```
+
+```python Python
+import requests
+
+class FlowIQ:
+    def __init__(self, bearer_token, tenant_id):
+        self.base_url = 'https://api.flowiq.live'
+        self.token = bearer_token
+        self.tenant_id = tenant_id
+        self.headers = {'Authorization': f'Bearer {bearer_token}'}
+    
+    def get_conversations(self, whatsapp_number, limit=10, page=1):
+        url = f'{self.base_url}/conversations'
+        params = {
+            'tenantId': self.tenant_id,
+            'whatsappNumber': whatsapp_number,
+            'limit': limit,
+            'page': page
+        }
+        response = requests.get(url, headers=self.headers, params=params)
+        return response.json()
+    
+    def get_contacts(self, search='', limit=20, page=1):
+        url = f'{self.base_url}/conversations'
+        params = {
+            'action': 'contacts',
+            'tenantId': self.tenant_id,
+            'search': search,
+            'limit': limit,
+            'page': page
+        }
+        response = requests.get(url, headers=self.headers, params=params)
+        return response.json()
+
+# Usage
+api = FlowIQ('YOUR_BEARER_TOKEN', 'YOUR_TENANT_ID')
+
+conversations = api.get_conversations('27123456789')
+print(conversations['messages'])
+
+contacts = api.get_contacts('John')
+print(contacts['contacts'])
+```
+</CodeGroup>
+
+## Getting Started
+
+<CardGroup cols={2}>
+  <Card
+    title="Quick Start Guide"
+    icon="rocket"
+    href="/flowiq-api-reference/quickstart"
+  >
+    Get started in minutes with step-by-step instructions
+  </Card>
+  <Card
+    title="API Reference"
+    icon="book"
+    href="/flowiq-api-reference/introduction"
+  >
+    Complete API documentation and authentication guide
+  </Card>
+  <Card
+    title="Conversations Endpoint"
+    icon="message"
+    href="/flowiq-api-reference/endpoint/conversations"
+  >
+    Detailed endpoint documentation with all parameters
+  </Card>
+  <Card
+    title="Contact Endpoint"
+    icon="address-book"
+    href="/flowiq-api-reference/endpoint/contact"
+  >
+    Learn about contact management features
+  </Card>
+</CardGroup>
+
+## Support & Resources
+
+<CardGroup cols={3}>
+  <Card
+    title="Dashboard"
+    icon="square-terminal"
+    href="https://app.flowiq.live"
+  >
+    Access your FlowIQ dashboard
+  </Card>
+  <Card
+    title="Support"
+    icon="envelope"
+    href="mailto:dev@flowapt.com"
+  >
+    Contact our development team
+  </Card>
+  <Card
+    title="Flowapt"
+    icon="globe"
+    href="https://flowapt.com"
+  >
+    Visit our main website
+  </Card>
+</CardGroup>
+
+## What's Next?
+
+Ready to dive in? Follow our [Quick Start Guide](/flowiq-api-reference/quickstart) to make your first API call in minutes, or explore the [complete API reference](/flowiq-api-reference/introduction) for detailed documentation.
+
