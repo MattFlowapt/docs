@@ -16,10 +16,14 @@
           {
             "group": "Get Started",
             "pages": [
-              "index",
-              "quickstart",
-              "flowiq-index",
-              "flowiq-quickstart"
+              {
+                "group": "FlowMod",
+                "pages": ["index", "quickstart"]
+              },
+              {
+                "group": "FlowIQ",
+                "pages": ["flowiq-index", "flowiq-quickstart"]
+              }
             ]
           },
           {
