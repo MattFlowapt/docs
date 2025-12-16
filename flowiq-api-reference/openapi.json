@@ -489,6 +489,263 @@
           }
         },
         "required": ["error", "message", "existing_contact"]
+      },
+      "SendWhatsAppRequest": {
+        "type": "object",
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "description": "Recipient phone number with country code",
+            "example": "+27123456789"
+          },
+          "message_type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image",
+              "video",
+              "audio",
+              "document",
+              "location",
+              "contacts",
+              "interactive",
+              "reaction"
+            ],
+            "description": "Type of message to send",
+            "example": "text"
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content (required for text messages)",
+            "example": "Hello, World!"
+          },
+          "media_url": {
+            "type": "string",
+            "description": "URL to media file (required for image/video/audio/document)",
+            "example": "https://example.com/image.jpg"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Caption for media messages",
+            "example": "Check this out!"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Filename for document messages",
+            "example": "document.pdf"
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "description": "Latitude coordinate",
+                "example": -33.9249
+              },
+              "longitude": {
+                "type": "number",
+                "description": "Longitude coordinate",
+                "example": 18.4241
+              },
+              "name": {
+                "type": "string",
+                "description": "Location name",
+                "example": "Cape Town Office"
+              },
+              "address": {
+                "type": "string",
+                "description": "Location address",
+                "example": "123 Main Street, Cape Town"
+              }
+            },
+            "required": ["latitude", "longitude"]
+          },
+          "contacts": {
+            "type": "array",
+            "description": "Array of contact cards to share",
+            "items": {
+              "type": "object"
+            }
+          },
+          "interactive": {
+            "type": "object",
+            "description": "Interactive message configuration",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["button", "list"],
+                "description": "Type of interactive message"
+              },
+              "body": {
+                "type": "string",
+                "description": "Main message body text (max 1024 chars)"
+              },
+              "header": {
+                "type": "string",
+                "description": "Header text (max 60 chars)"
+              },
+              "footer": {
+                "type": "string",
+                "description": "Footer text (max 60 chars)"
+              },
+              "buttons": {
+                "type": "array",
+                "description": "Array of buttons (max 3, for button type)",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Button identifier"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Button text (max 20 chars)"
+                    }
+                  }
+                }
+              },
+              "button": {
+                "type": "string",
+                "description": "Menu button text for list type (max 20 chars)"
+              },
+              "sections": {
+                "type": "array",
+                "description": "Array of sections (max 10, for list type)",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "Section title (max 24 chars)"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Row identifier"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "Row title (max 24 chars)"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Row description (max 72 chars)"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "header_media": {
+                "type": "object",
+                "description": "Media header for button messages",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["image", "video", "document"]
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "reaction": {
+            "type": "object",
+            "description": "Reaction configuration",
+            "properties": {
+              "message_id": {
+                "type": "string",
+                "description": "WhatsApp message ID to react to"
+              },
+              "emoji": {
+                "type": "string",
+                "description": "Emoji to react with",
+                "default": "👍"
+              }
+            },
+            "required": ["message_id"]
+          },
+          "context_message_id": {
+            "type": "string",
+            "description": "WhatsApp message ID to reply to",
+            "example": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI..."
+          }
+        },
+        "required": ["phone_number", "message_type"]
+      },
+      "SendWhatsAppResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the message was sent successfully",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Message sent successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "message_id": {
+                "type": "string",
+                "description": "WhatsApp message ID",
+                "example": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI..."
+              },
+              "recipient": {
+                "type": "string",
+                "description": "Recipient phone number",
+                "example": "27123456789"
+              },
+              "message_type": {
+                "type": "string",
+                "description": "Type of message sent",
+                "example": "text"
+              },
+              "organization": {
+                "type": "string",
+                "description": "Organization name",
+                "example": "Your Organization"
+              },
+              "meta_response": {
+                "type": "object",
+                "description": "Raw response from Meta API"
+              }
+            }
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "ContactNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Contact not found"
+          },
+          "message": {
+            "type": "string",
+            "example": "No contact exists with WhatsApp number 27123456789. Please create the contact first using the /api/contact endpoint."
+          },
+          "whatsapp_id": {
+            "type": "string",
+            "example": "27123456789"
+          }
+        },
+        "required": ["error", "message", "whatsapp_id"]
       }
     }
   },
@@ -919,6 +1176,324 @@
                 "example": {
                   "success": false,
                   "error": "Internal server error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/send-whatsapp": {
+      "post": {
+        "operationId": "sendWhatsAppMessage",
+        "tags": ["Endpoints"],
+        "summary": "Send WhatsApp Message",
+        "description": "Send WhatsApp messages through Meta's WhatsApp Business API. Supports text, media (image/video/audio/document), location, contacts, interactive messages (buttons/lists), and reactions.\n\n## Requirements\n- Organization must have Meta WhatsApp provider configured\n- Contact must already exist in your organization\n- Valid API key with `fiq_` prefix\n\n## Message Types\n- `text` - Plain text messages\n- `image` - Image with optional caption\n- `video` - Video with optional caption\n- `audio` - Audio/voice message\n- `document` - Document with optional filename and caption\n- `location` - Location sharing\n- `contacts` - Contact card sharing\n- `interactive` - Buttons or list menus\n- `reaction` - Emoji reaction to existing message",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Organization tenant identifier (slug)",
+            "example": "your-org-tenant-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendWhatsAppRequest"
+              },
+              "examples": {
+                "text-message": {
+                  "summary": "Text Message",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "text",
+                    "text": "Hello! This is a test message from FlowIQ API."
+                  }
+                },
+                "image-message": {
+                  "summary": "Image with Caption",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "image",
+                    "media_url": "https://example.com/image.jpg",
+                    "caption": "Check out this image!"
+                  }
+                },
+                "document-message": {
+                  "summary": "Document Message",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "document",
+                    "media_url": "https://example.com/invoice.pdf",
+                    "filename": "Invoice_2025.pdf",
+                    "caption": "Please find your invoice attached"
+                  }
+                },
+                "location-message": {
+                  "summary": "Location Message",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "location",
+                    "location": {
+                      "latitude": -33.9249,
+                      "longitude": 18.4241,
+                      "name": "Cape Town Office",
+                      "address": "123 Main Street, Cape Town"
+                    }
+                  }
+                },
+                "interactive-buttons": {
+                  "summary": "Interactive Buttons",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "interactive",
+                    "interactive": {
+                      "type": "button",
+                      "header": "Order Confirmation",
+                      "body": "Would you like to confirm your order?",
+                      "footer": "Reply within 24 hours",
+                      "buttons": [
+                        { "id": "confirm", "title": "Confirm" },
+                        { "id": "cancel", "title": "Cancel" }
+                      ]
+                    }
+                  }
+                },
+                "interactive-list": {
+                  "summary": "Interactive List",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "interactive",
+                    "interactive": {
+                      "type": "list",
+                      "header": "Our Menu",
+                      "body": "Please select from our available options:",
+                      "button": "View Menu",
+                      "sections": [
+                        {
+                          "title": "Main Dishes",
+                          "rows": [
+                            {
+                              "id": "burger",
+                              "title": "Burger",
+                              "description": "Beef patty with cheese"
+                            },
+                            {
+                              "id": "pizza",
+                              "title": "Pizza",
+                              "description": "Margherita or Pepperoni"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "reaction-message": {
+                  "summary": "Reaction",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "reaction",
+                    "reaction": {
+                      "message_id": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI...",
+                      "emoji": "❤️"
+                    }
+                  }
+                },
+                "reply-to-message": {
+                  "summary": "Reply to Message",
+                  "value": {
+                    "phone_number": "+27123456789",
+                    "message_type": "text",
+                    "text": "This is a reply to your message!",
+                    "context_message_id": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI..."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendWhatsAppResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "Message sent successfully",
+                  "data": {
+                    "message_id": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI...",
+                    "recipient": "27123456789",
+                    "message_type": "text",
+                    "organization": "Your Organization Name",
+                    "meta_response": {
+                      "messaging_product": "whatsapp",
+                      "contacts": [
+                        { "input": "27123456789", "wa_id": "27123456789" }
+                      ],
+                      "messages": [
+                        { "id": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI..." }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters or provider",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missing-phone": {
+                    "summary": "Missing Phone Number",
+                    "value": {
+                      "error": "Missing required field",
+                      "message": "phone_number is required"
+                    }
+                  },
+                  "missing-text": {
+                    "summary": "Missing Text for Text Message",
+                    "value": {
+                      "error": "Missing required field",
+                      "message": "text is required for text messages"
+                    }
+                  },
+                  "invalid-provider": {
+                    "summary": "Invalid Provider",
+                    "value": {
+                      "error": "Invalid provider",
+                      "message": "Organization must use Meta WhatsApp provider. Current: wati"
+                    }
+                  },
+                  "invalid-message-type": {
+                    "summary": "Invalid Message Type",
+                    "value": {
+                      "error": "Invalid message type",
+                      "message": "Unsupported message_type: unknown. Supported types: text, image, video, audio, document, location, contacts, interactive, reaction"
+                    }
+                  },
+                  "meta-not-configured": {
+                    "summary": "Meta Not Configured",
+                    "value": {
+                      "error": "Meta not configured",
+                      "message": "Organization Meta WhatsApp credentials are not configured"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key or tenant mismatch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid-key": {
+                    "summary": "Invalid API Key",
+                    "value": {
+                      "error": "Invalid API key",
+                      "message": "API key has been revoked"
+                    }
+                  },
+                  "wrong-format": {
+                    "summary": "Wrong Token Format",
+                    "value": {
+                      "error": "Invalid token format",
+                      "message": "Bearer token must be an API key (fiq_...)"
+                    }
+                  },
+                  "tenant-mismatch": {
+                    "summary": "Tenant Mismatch",
+                    "value": {
+                      "error": "API key mismatch",
+                      "message": "API key does not belong to the specified tenant"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Organization or contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/ErrorResponse" },
+                    { "$ref": "#/components/schemas/ContactNotFoundResponse" }
+                  ]
+                },
+                "examples": {
+                  "org-not-found": {
+                    "summary": "Organization Not Found",
+                    "value": {
+                      "error": "Organization not found",
+                      "message": "No organization found with tenantId: YOUR_TENANT_ID"
+                    }
+                  },
+                  "contact-not-found": {
+                    "summary": "Contact Not Found",
+                    "value": {
+                      "error": "Contact not found",
+                      "message": "No contact exists with WhatsApp number 27123456789. Please create the contact first using the /api/contact endpoint.",
+                      "whatsapp_id": "27123456789"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Meta upload failed or server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "meta-upload-failed": {
+                    "summary": "Meta Upload Failed",
+                    "value": {
+                      "error": "Meta upload failed",
+                      "message": "Failed to upload media to Meta"
+                    }
+                  },
+                  "storage-failed": {
+                    "summary": "Storage Upload Failed",
+                    "value": {
+                      "error": "Storage upload failed",
+                      "message": "Failed to upload to storage"
+                    }
+                  },
+                  "send-failed": {
+                    "summary": "Message Send Failed",
+                    "value": {
+                      "error": "Failed to send message",
+                      "message": "WhatsApp API error message"
+                    }
+                  }
                 }
               }
             }

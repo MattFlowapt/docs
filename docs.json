@@ -89,7 +89,8 @@
             "group": "Endpoints",
             "pages": [
               "flowiq-api-reference/endpoint/conversations",
-              "flowiq-api-reference/endpoint/contact"
+              "flowiq-api-reference/endpoint/contact",
+              "flowiq-api-reference/endpoint/send-whatsapp"
             ]
           }
         ]
