@@ -373,7 +373,7 @@
             "example": "customer,premium,vip"
           }
         },
-        "required": ["phone_number"]
+        "required": ["name", "phone_number"]
       },
       "CreateContactResponse": {
         "type": "object",
@@ -788,6 +788,7 @@
                 "minimal-contact": {
                   "summary": "Minimal Required Fields",
                   "value": {
+                    "name": "John Doe",
                     "phone_number": "+27123456789"
                   }
                 }

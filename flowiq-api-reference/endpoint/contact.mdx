@@ -47,13 +47,14 @@ curl -X POST "https://api.flowiq.live/contact?tenantId=YOUR_TENANT_ID" \
   }'
 ```
 
-### Minimal Request (Phone Only)
+### Minimal Request (Name + Phone)
 
 ```bash
 curl -X POST "https://api.flowiq.live/contact?tenantId=YOUR_TENANT_ID" \
   -H "Authorization: Bearer fiq_YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
+    "name": "John Doe",
     "phone_number": "+27123456789"
   }'
 ```
@@ -73,7 +74,7 @@ curl -X POST "https://api.flowiq.live/contact?tenantId=YOUR_TENANT_ID" \
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `phone_number` | string | Yes | Phone number with country code (e.g., +27123456789) |
-| `name` | string | No | Contact's full name |
+| `name` | string | Yes | Contact's full name |
 | `email` | string | No | Contact's email address |
 | `tags` | string | No | Comma-separated tags (e.g., "customer,premium,vip") |
 
