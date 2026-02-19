@@ -43,7 +43,7 @@
               },
               {
                 "group": "FlowMod",
-                "pages": ["index", "quickstart"]
+                "pages": ["flowmod-index", "quickstart"]
               }
             ]
           }
