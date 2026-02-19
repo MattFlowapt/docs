@@ -38,30 +38,13 @@
             "group": "Get Started",
             "pages": [
               {
-                "group": "FlowIQ",
-                "pages": ["flowiq-index", "flowiq-quickstart"]
-              },
-              {
                 "group": "FlowMod",
                 "pages": ["index", "quickstart"]
+              },
+              {
+                "group": "FlowIQ",
+                "pages": ["flowiq-index", "flowiq-quickstart"]
               }
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "FlowIQ API",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": ["flowiq-api-reference/introduction"]
-          },
-          {
-            "group": "Endpoints",
-            "pages": [
-              "flowiq-api-reference/endpoint/conversations",
-              "flowiq-api-reference/endpoint/contact",
-              "flowiq-api-reference/endpoint/send-whatsapp"
             ]
           }
         ]
@@ -94,6 +77,23 @@
             "pages": [
               "api-reference/endpoint/create-group",
               "api-reference/endpoint/list-groups"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "FlowIQ API",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["flowiq-api-reference/introduction"]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "flowiq-api-reference/endpoint/conversations",
+              "flowiq-api-reference/endpoint/contact",
+              "flowiq-api-reference/endpoint/send-whatsapp"
             ]
           }
         ]
