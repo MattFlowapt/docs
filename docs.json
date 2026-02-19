@@ -39,7 +39,7 @@
             "pages": [
               {
                 "group": "FlowIQ",
-                "pages": ["flowiq-index", "flowiq-quickstart"]
+                "pages": ["index", "flowiq-quickstart"]
               },
               {
                 "group": "FlowMod",
