@@ -61,7 +61,16 @@
             "pages": [
               "flowiq-api-reference/endpoint/conversations",
               "flowiq-api-reference/endpoint/contact",
-              "flowiq-api-reference/endpoint/send-whatsapp"
+              "flowiq-api-reference/endpoint/send-text",
+              "flowiq-api-reference/endpoint/send-image",
+              "flowiq-api-reference/endpoint/send-video",
+              "flowiq-api-reference/endpoint/send-audio",
+              "flowiq-api-reference/endpoint/send-document",
+              "flowiq-api-reference/endpoint/send-location",
+              "flowiq-api-reference/endpoint/send-contacts",
+              "flowiq-api-reference/endpoint/send-interactive-buttons",
+              "flowiq-api-reference/endpoint/send-interactive-list",
+              "flowiq-api-reference/endpoint/send-reaction"
             ]
           }
         ]

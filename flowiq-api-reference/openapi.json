@@ -715,15 +715,6 @@
                 "description": "Type of message sent",
                 "example": "text"
               },
-              "organization": {
-                "type": "string",
-                "description": "Organization name",
-                "example": "Your Organization"
-              },
-              "meta_response": {
-                "type": "object",
-                "description": "Raw response from Meta API"
-              }
             }
           }
         },
@@ -1340,17 +1331,7 @@
                   "data": {
                     "message_id": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI...",
                     "recipient": "27123456789",
-                    "message_type": "text",
-                    "organization": "Your Organization Name",
-                    "meta_response": {
-                      "messaging_product": "whatsapp",
-                      "contacts": [
-                        { "input": "27123456789", "wa_id": "27123456789" }
-                      ],
-                      "messages": [
-                        { "id": "wamid.HBgLMjc4MTIzNDU2NzgVAgASGBQzRUI..." }
-                      ]
-                    }
+                    "message_type": "text"
                   }
                 }
               }

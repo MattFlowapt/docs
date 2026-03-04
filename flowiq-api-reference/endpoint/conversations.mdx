@@ -11,9 +11,9 @@ openapi: 'GET /conversations'
 
 | Action | Description | Required Parameters |
 |--------|-------------|---------------------|
-| `conversation-messages` | Get messages from a conversation (default) | `tenantId`, `whatsappNumber` or `contactId` |
-| `contacts` | List all contacts | `tenantId` |
-| `find-by-phone` | Find a contact by phone number | `tenantId`, `whatsappNumber` |
+| `conversation-messages` | Get messages from a conversation (default) | `whatsappNumber` or `contactId` |
+| `contacts` | List all contacts | — |
+| `find-by-phone` | Find a contact by phone number | `whatsappNumber` |
 
 ---
 
@@ -24,28 +24,28 @@ Fetch messages from a specific conversation. This is the default action.
 ### Basic Usage
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789" \
+curl -X GET "https://api.flowiq.live/conversations?whatsappNumber=27123456789" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
 ### Paginated Results
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&page=2&limit=20" \
+curl -X GET "https://api.flowiq.live/conversations?whatsappNumber=27123456789&page=2&limit=20" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
 ### Search Messages by Text
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&query=urgent,help" \
+curl -X GET "https://api.flowiq.live/conversations?whatsappNumber=27123456789&query=urgent,help" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
 ### Search by Shopify Order ID
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789&orderId=1234567890" \
+curl -X GET "https://api.flowiq.live/conversations?whatsappNumber=27123456789&orderId=1234567890" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
@@ -58,21 +58,21 @@ Retrieve a paginated list of all contacts for your organization.
 ### Get All Contacts
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR_TENANT_ID" \
+curl -X GET "https://api.flowiq.live/conversations?action=contacts" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
 ### Paginated Contacts
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR_TENANT_ID&page=2&limit=25" \
+curl -X GET "https://api.flowiq.live/conversations?action=contacts&page=2&limit=25" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
 ### Search Contacts by Name/Phone
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR_TENANT_ID&search=john" \
+curl -X GET "https://api.flowiq.live/conversations?action=contacts&search=john" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
@@ -83,7 +83,7 @@ curl -X GET "https://api.flowiq.live/conversations?action=contacts&tenantId=YOUR
 Look up a specific contact using their phone number.
 
 ```bash
-curl -X GET "https://api.flowiq.live/conversations?action=find-by-phone&tenantId=YOUR_TENANT_ID&whatsappNumber=27123456789" \
+curl -X GET "https://api.flowiq.live/conversations?action=find-by-phone&whatsappNumber=27123456789" \
   -H "Authorization: Bearer YOUR_BEARER_TOKEN"
 ```
 
