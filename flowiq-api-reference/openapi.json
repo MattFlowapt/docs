@@ -714,7 +714,7 @@
                 "type": "string",
                 "description": "Type of message sent",
                 "example": "text"
-              },
+              }
             }
           }
         },
