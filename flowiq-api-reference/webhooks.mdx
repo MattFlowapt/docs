@@ -1,0 +1,151 @@
+---
+title: "Events"
+description: "Receive real-time events from FlowIQ when messages are sent, delivered, read, or received."
+---
+
+FlowIQ sends a `POST` request to your registered webhook URL whenever an event occurs. Each payload includes an `event_type` field so you can route events accordingly.
+
+<Note>
+  Subscribers registered as type `all` receive every event. Those registered for a specific type (e.g. `message_received`) only receive that one.
+</Note>
+
+---
+
+## Event Types
+
+### `message_received`
+
+Fired when a user sends you a WhatsApp message.
+
+```json
+{
+  "event_type": "message_received",
+  "organization_id": "uuid",
+  "timestamp": "2026-03-07T00:00:00.000Z",
+  "whatsapp_message_id": "wamid.xxx",
+  "message_type": "text | image | video | audio | document | location | button | interactive | sticker",
+  "message": "Hello there",
+  "media_type": null,
+  "media_url": null,
+  "file_name": null,
+  "whatsapp_id": "1234567890",
+  "contact_id": "uuid",
+  "reply_context_id": null,
+  "location_data": null
+}
+```
+
+- `media_type` / `media_url` / `file_name` are populated for image, video, audio, and document messages
+- `location_data` is `{ latitude, longitude, name, address }` for location messages
+- `reply_context_id` is the `wamid` of the message being replied to
+
+---
+
+### `message_sent`
+
+Fired when Meta confirms your outbound message was sent (lightweight receipt).
+
+```json
+{
+  "event_type": "message_sent",
+  "whatsapp_message_id": "wamid.xxx",
+  "organization_id": "uuid",
+  "status": "sent",
+  "timestamp": "2026-03-07T00:00:00.000Z",
+  "whatsapp_id": "1234567890"
+}
+```
+
+---
+
+### `sent_message`
+
+Also fired on `sent` — but with the full `helpdesk_messages` row so you have the message content.
+
+```json
+{
+  "event_type": "sent_message",
+  "id": "uuid",
+  "organization_id": "uuid",
+  "message": "Hi, here is your order update!",
+  "sender_type": "bot-whatsapp",
+  "created_at": "2026-03-07T00:00:00.000Z",
+  "contact_id": "uuid",
+  "message_status": "sent",
+  "media_type": null,
+  "media_url": null,
+  "media_file_name": null,
+  "member_id": null,
+  "whatsapp_message_id": "wamid.xxx",
+  "reply_context_id": null,
+  "broadcast_id": null,
+  "sent_receipt_received": true,
+  "delivered_receipt_received": false,
+  "read_receipt_received": false,
+  "timestamp": "2026-03-07T00:00:00.000Z"
+}
+```
+
+---
+
+### `message_delivered`
+
+```json
+{
+  "event_type": "message_delivered",
+  "whatsapp_message_id": "wamid.xxx",
+  "organization_id": "uuid",
+  "status": "delivered",
+  "timestamp": "2026-03-07T00:00:00.000Z",
+  "whatsapp_id": "1234567890"
+}
+```
+
+---
+
+### `message_read`
+
+```json
+{
+  "event_type": "message_read",
+  "whatsapp_message_id": "wamid.xxx",
+  "organization_id": "uuid",
+  "status": "read",
+  "timestamp": "2026-03-07T00:00:00.000Z",
+  "whatsapp_id": "1234567890"
+}
+```
+
+---
+
+### `message_failed`
+
+Fired for `failed`, `undelivered`, and `warning` statuses.
+
+```json
+{
+  "event_type": "message_failed",
+  "whatsapp_message_id": "wamid.xxx",
+  "organization_id": "uuid",
+  "status": "failed | undelivered | warning",
+  "timestamp": "2026-03-07T00:00:00.000Z",
+  "whatsapp_id": "1234567890"
+}
+```
+
+---
+
+### `call`
+
+Fired when a WhatsApp call event arrives. Contains the full raw Meta webhook payload plus:
+
+```json
+{
+  "event_type": "call",
+  "object": "whatsapp_business_account",
+  "entry": [...],
+  "organization_id": "uuid",
+  "timestamp": "2026-03-07T00:00:00.000Z",
+  "phone_number_id": "1234567890"
+}
+```

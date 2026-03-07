@@ -57,6 +57,10 @@
             "pages": ["flowiq-api-reference/introduction"]
           },
           {
+            "group": "Webhooks",
+            "pages": ["flowiq-api-reference/webhooks"]
+          },
+          {
             "group": "Endpoints",
             "pages": [
               "flowiq-api-reference/endpoint/conversations",
